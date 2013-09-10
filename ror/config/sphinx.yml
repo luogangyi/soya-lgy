@@ -1,0 +1,14 @@
+development: &my_settings
+  version: 2.0.10
+  bin_path: /usr/local/sphinx-for-chinese/bin
+  #searchd_binary_name: searchd
+  #indexer_binary_name: indexer
+  port: 9313
+  max_matches: 100000
+  ngram_len: 1
+  ngram_chars: "U+3000..U+2FA1F"
+  charset_type: utf-8
+test:
+  <<: *my_settings
+production:
+  <<: *my_settings

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  info_source: 
+  fetched_info_count: 1
+  real_fetched_info_count: 1
+  previous_executed: 2013-05-21 23:21:30
+
+two:
+  info_source: 
+  fetched_info_count: 1
+  real_fetched_info_count: 1
+  previous_executed: 2013-05-21 23:21:30

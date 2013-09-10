@@ -1,0 +1,6 @@
+在根目录下，有一名为 python_env.sh 的脚本。
+
+在服务器上运行该脚本 sudo sh python_env.sh
+根据提示同意安装。
+
+脚本功能包括，安装easy_install，安装爬虫脚本所依赖的库，修改hosts文件加速访问。

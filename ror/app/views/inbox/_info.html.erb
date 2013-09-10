@@ -1,0 +1,159 @@
+<blockquote cite="weibo-list" id="<%= info.id %>" key="<%= info.keyword.str %>">
+	<% if @type== "weibo" %>
+	<p style="font-size:15px;line-height:1.5;">
+		<a href="http://weibo.com/u/<%= info.weibo_user.user_origin_id %>" target="_blank">
+			<% if info.weibo_user.verified %>
+			<img src="/assets/img/v.png">
+			<% end %><%= info.weibo_user_screen_name %>
+			<% if info.weibo_user.gender == "f" %>
+			<img src="/assets/img/f.png" style="margin-bottom:2px;">
+			<% else %>
+			<img src="/assets/img/m.png" style="margin-bottom:2px;">
+			<% end %>:</a>
+		<span class="weibo-txt"><%= info.text %></span>
+	</p>
+	<small>
+			<a><%= info.info_source.str %></a>|
+			<a>用户粉丝数(<%= info.weibo_user.follower_count %>)</a>|
+			<a><%= info.geo_info_province %>-<%= info.geo_info_city %></a>|
+			<a>转发数(<%= info.repost_count %>)</a>|
+			<a>评论数(<%= info.comment_count %>)</a>|
+			<a href="<%= info.url %>" target="_blank">原链接</a>|
+			<a><%= info.created_at.localtime.to_s(:db) %></a>
+	</small>	
+
+	<% elsif @type== "wiki"%>
+	<p style="font-size:15px;line-height:1.5;">
+		<a><%= info.title %>:</a><br>
+		<span class="weibo-txt"><%= info.content %></span>
+	</p>
+	<small>
+			<a><%= info.info_source.str %></a>|
+			<a><%= info.wiki_user_screen_name %></a>|
+			<a>阅读数(<%= info.read_count %>)</a>|
+			<a>评论数(<%= info.comment_count %>)</a>|
+			<a><% if info.answered == 1 %>已回复<% else %>无回复<% end %></a>|
+			<a href="<%= info.url %>" target="_blank">原链接</a>|
+			<a><%= info.created_at.localtime.to_s(:db) %></a>
+	</small>	
+
+	<% elsif @type== "bbs"%>
+	<p style="font-size:15px;line-height:1.5;">
+		<a><%= info.title %>:</a><br>
+		<span class="weibo-txt"><%= info.content %></span>
+	</p>
+	<small>
+			<a><%= info.info_source.str %></a>|
+			<a><%= info.bbs_user_screen_name %></a>|
+			<a>阅读数(<%= info.read_count %>)</a>|
+			<a>评论数(<%= info.comment_count %>)</a>|
+			<a href="<%= info.url %>" target="_blank">原链接</a>|
+			<a><%= info.created_at.localtime.to_s(:db) %></a>
+	</small>	
+
+
+	<% elsif @type== "blog"%>
+	<p style="font-size:15px;line-height:1.5;">
+		<a><%= info.title %>:</a><br>
+		<span class="weibo-txt"><%= info.content %></span>
+	</p>
+	<small>
+			<a><%= info.info_source.str %></a>|
+			<a><%= info.blog_user_screen_name %></a>|
+			<a>阅读数(<%= info.read_count %>)</a>|
+			<a>评论数(<%= info.comment_count %>)</a>|
+			<a href="<%= info.url %>" target="_blank">原链接</a>|
+			<a><%= info.created_at.localtime.to_s(:db) %></a>
+	</small>	
+
+
+
+
+	<% elsif @type== "news"%>
+	<p style="font-size:15px;line-height:1.5;">
+		<a><%= info.title %>:</a><br>
+		<span class="weibo-txt"><%= info.content %></span>
+	</p>
+	<small>
+			<a><%= info.source_name %></a>|
+			<a href="<%= info.url %>" target="_blank">原链接</a>|
+			<a><%= info.created_at.localtime.to_s(:db) %></a>
+	</small>	
+
+	<% elsif @type== "video"%>
+	<p style="font-size:15px;line-height:1.5;">
+		<a><%= info.title %></a>
+	</p>
+	<small>
+			<a><%= info.info_source.str %></a>|
+			<a><%= info.video_user_screen_name %></a>|
+			<a>观看数(<%= info.watch_count %>)</a>|
+			<a>评论数(<%= info.comment_count %>)</a>|
+			<a>顶(<%= info.up_count %>)</a>|
+			<a>踩(<%= info.down_count %>)</a>|
+			<a href="<%= info.url %>" target="_blank">原链接</a>|
+			<a><%= info.created_at.localtime.to_s(:db) %></a>
+	</small>	
+	
+
+
+	<% end %>
+
+
+	<div class="feed_tag_list_form clearfix" style="">
+	<div class="ftlf_left">标签：</div>
+	<div class="ftlf_right">
+		<div class="ftlf_r_left">
+			<div class="wTablist2 S_line1 S_link2 S_txt2" id="q1">
+			<% info.analysis_categorizeds.each do |i| %>
+				<% if i.label.category.str != "情感" %> 
+					<a class="S_bg1 S_line1 S_link2 del_tag" title="删除这个标签" href="javascript:void(0);"><%= i.label.str %></a>
+				<% end %>
+			<% end %>
+			<a href="javascript:;" class="icon-tag icon_edit" title="编辑这条微博的标签"></a>
+			</div>
+		</div>
+
+
+		<div class="ftlf_wc btn_handled">完成审核</div>
+
+
+		<a class="ftlf_r_right emotion emotion_<%= info.sentiment_enstr %>" href="javascript:;"><%= info.sentiment_str %>消息</a>
+
+		
+		<div class="ftlf_r_right_l">
+			预警级别：
+			<ul class="stars stars<%= info.urgency %>">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+
+		<span class="item_edit">
+			<% if @type== "weibo" %>
+			<a class="btn blue mini <%= info.being_monitored? ? "un" : "" %>focus" href="javascript:;" title="关注"><i class="icon-eye-<%= info.being_monitored? ? "close" : "open" %>"></i></a>
+			<% end %>
+			<a class="btn grey mini <%= info.operation.ignored ? "un" : "" %>ignore" href="javascript:;"><i class="icon-<%= info.operation.ignored ? "undo" : "trash" %>" title="忽略"></i></a>
+		</span>
+	</div>
+	</div>
+	<div class="edit_tags" style="display: none;">
+		<div class="edit_tags_label">可选标签：</div>
+
+			<% label_categories.each do |c| %>
+			<div class="tags_c">
+				<%= c.str %>
+				<% label_at_category(c.id).each do |l| %>
+					<a class="S_bg1 S_line1 S_link2 add_tag" title="添加这个标签" href="javascript:void(0);" cid="1"><%= l.str %></a>
+				<% end %>
+			</div>
+			<% end %>
+
+
+		<div class="clear"></div>
+	</div>
+
+</blockquote>

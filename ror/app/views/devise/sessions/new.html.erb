@@ -1,0 +1,116 @@
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+  	<meta charset="utf-8" />
+  	<title>TBS舆情监控系统</title>
+  	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  	<meta content="" name="description" />
+  	<meta content="" name="author" />
+  	<link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  	<link href="/assets/css/metro.css" rel="stylesheet" />
+  	<link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+  	<link href="/assets/css/style.css" rel="stylesheet" />
+  	<link href="/assets/css/style_responsive.css" rel="stylesheet" />
+  	<link href="/assets/css/style_default.css" rel="stylesheet" id="style_color" />
+  	<link rel="stylesheet" type="text/css" href="/assets/uniform/css/uniform.default.css" />
+  	<link rel="shortcut icon" href="/assets/img/favicon.ico" />
+  	
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body class="login">
+  <!-- BEGIN LOGO -->
+  <div class="logo">
+    <img src="/assets/img/tbslogo.png" alt="" /> 
+  </div>
+  <!-- END LOGO -->
+  <!-- BEGIN LOGIN -->
+  <div class="content">
+    <!-- BEGIN LOGIN FORM -->
+    
+	<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+      <h3 class="form-title">登录管理系统</h3>
+      <div class="control-group">
+        <div class="controls">
+          <div class="input-icon left">
+            <i class="icon-user"></i>
+            <%= f.email_field :email, :class => "m-wrap", :placeholder => "用户邮箱" %>
+          </div>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <div class="input-icon left">
+            <i class="icon-lock"></i>
+            <%= f.password_field :password, :class => "m-wrap", :placeholder => "用户密码" %>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <label class="checkbox">
+        <%= f.check_box :remember_me %> 保持登录状态
+        </label>
+        
+        <%= f.submit "登陆" ,:class => "btn green pull-right" %>
+                
+      </div>
+      <div class="forget-password">
+        <h4>忘记了您的密码 ?</h4>
+        <p>
+          不用担心, 点击 <a href="javascript:;" class="" id="forget-password">这里</a>
+          重置密码。
+        </p>
+      </div>
+      
+    <% end %>
+    <!-- END LOGIN FORM -->        
+    <!-- BEGIN FORGOT PASSWORD FORM -->
+    <form class="form-vertical forget-form new_admin" id="new_admin" action="/admins/password" method="post">
+      <h3 class="">忘记密码？</h3>
+      <p>请输入您的邮箱用于重置密码。</p> 
+      <div class="control-group">
+        <div class="controls">
+          <div class="input-icon left">
+            <i class="icon-envelope"></i>
+            <input class="m-wrap" type="text" placeholder="Email" id="admin_email" name="admin[email]" type="email" value="">
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <a href="javascript:;" id="back-btn" class="btn">
+        <i class="m-icon-swapleft"></i> 返 回
+        </a>
+        <input class="btn green pull-right" name="commit" type="submit" value="提交">
+         
+      </div>
+    </form>
+    <!-- END FORGOT PASSWORD FORM -->
+  </div>
+  <!-- END LOGIN -->
+  <!-- BEGIN COPYRIGHT -->
+  <div class="copyright">
+    2013 &copy; TBS Information.
+  </div>
+  <!-- END COPYRIGHT -->
+  <!-- BEGIN JAVASCRIPTS -->
+  <script src="/assets/js/jquery-1.8.3.min.js"></script>
+  <script src="/assets/bootstrap/js/bootstrap.min.js"></script>  
+  <script src="/assets/uniform/jquery.uniform.min.js"></script> 
+  <script src="/assets/js/jquery.blockui.js"></script>
+  <script src="/assets/js/app.js"></script>
+  
+  <script>
+  jQuery(document).ready(function() {     
+      App.initLogin();
+    });
+	</script>
+  <!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>
+
+
+
+

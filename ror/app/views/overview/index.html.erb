@@ -1,0 +1,612 @@
+<title>TBS-IWOM:舆情概览</title>
+
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="overview">舆情概览</span>				
+					<small>查看最近24小时的舆情监控整体情况</small>
+				</h3>
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href="index.php">舆情概览</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">首页</a></li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+		<div id="dashboard">
+		
+			<div class="row-fluid">
+				<div class="span12">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet solid bordered light-grey">
+						<div class="portlet-title">
+							<h4><i class="icon-bar-chart"></i>舆情信息总数量</h4>
+							<div class="tools">
+								<div class="btn-group pull-right" data-toggle="buttons-radio">
+									<a href="javascript:;" class="btn mini">舆情信息总数量</a>
+									<a href="javascript:;" class="btn mini active">负面消息总数量</a>
+								</div>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div id="site_statistics_loading">
+								<img src="/assets/img/loading.gif" alt="loading" />
+							</div>
+							<div id="site_statistics_content" class="hide">
+								<div id="site_statistics" class="chart"></div>
+							</div>
+						</div>
+						<div class="hidden" id="overview_info_nums"><%= overview_info_nums %></div>
+						<div class="hidden" id="overview_info_nagtive_nums"><%= overview_info_nagtive_nums %></div>
+					</div>
+					<!-- END PORTLET-->
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<!-- BEGIN DASHBOARD STATS -->
+			<div class="row-fluid">
+				<% if is_HK? %>
+				<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+					<div class="dashboard-stat blue">
+						<div class="visual">
+							<i class="icon-bar-chart"></i>
+						</div>
+						<div class="details">
+							<div class="number">
+								<%= n1 %>
+							</div>
+							<div class="desc">									
+								信息总量
+							</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= info_total_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+				<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+					<div class="dashboard-stat green">
+						<div class="visual">
+							<i class="icon-twitter"></i>
+						</div>
+						<div class="details">
+							<div class="number"><%= n2 %></div>
+							<div class="desc">东方航空</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= weibo_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+				<div class="span3 responsive" data-tablet="span6  fix-offset" data-desktop="span3">
+					<div class="dashboard-stat purple">
+						<div class="visual">
+							<i class="icon-pinterest"></i>
+						</div>
+						<div class="details">
+							<div class="number"><%= n3 %></div>
+							<div class="desc">吉祥航空</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= new_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+				<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+					<div class="dashboard-stat yellow">
+						<div class="visual">
+							<i class="icon-rss"></i>
+						</div>
+						<div class="details">
+							<div class="number"><%= n4 %></div>
+							<div class="desc">竞争对手</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= bbs_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+
+				<% else %>
+				<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+					<div class="dashboard-stat blue">
+						<div class="visual">
+							<i class="icon-bar-chart"></i>
+						</div>
+						<div class="details">
+							<div class="number">
+								<%= info_total_count%>
+							</div>
+							<div class="desc">									
+								舆情总量
+							</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= info_total_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+				<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+					<div class="dashboard-stat green">
+						<div class="visual">
+							<i class="icon-twitter"></i>
+						</div>
+						<div class="details">
+							<div class="number"><%= weibo_count%></div>
+							<div class="desc">微博信息</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= weibo_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+				<div class="span3 responsive" data-tablet="span6  fix-offset" data-desktop="span3">
+					<div class="dashboard-stat purple">
+						<div class="visual">
+							<i class="icon-pinterest"></i>
+						</div>
+						<div class="details">
+							<div class="number"><%= new_count%></div>
+							<div class="desc">新闻媒体</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= new_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+				<div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+					<div class="dashboard-stat yellow">
+						<div class="visual">
+							<i class="icon-rss"></i>
+						</div>
+						<div class="details">
+							<div class="number"><%= bbs_count%></div>
+							<div class="desc">相关论坛</div>
+						</div>
+						<a class="more">
+						较昨天同时段 <i class="icon-arrow-<%= bbs_count_c %> m-icon-white"></i>
+						</a>						
+					</div>
+				</div>
+				<% end %>
+
+
+			</div>
+
+
+			<!-- END DASHBOARD STATS -->
+			<div class="clearfix"></div>
+			<div class="row-fluid">
+				
+				<div class="span3">
+					<div class="portlet">
+						<div class="portlet-title">
+							<h4><i class="icon-reorder"></i>舆情情感分布</h4>
+							<div class="tools">
+								<a href="javascript:;" class="reload"></a>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div id="graph_1" class="pie"></div>
+						</div>
+					</div>
+				</div>
+				<div class="span3">
+					<!-- BEGIN REGIONAL STATS PORTLET-->
+					<div class="portlet">
+						<div class="portlet-title">
+							<h4><i class="icon-globe"></i>地理位置分布</h4>
+							<div class="tools">
+								<a href="javascript:;" class="reload"></a>
+							</div>
+						</div>
+						<div class="portlet-body">										
+							<div id="vmap_china" style="background: white; width: 234px; height: 170px; margin-top:30px;"></div>
+						</div>
+					</div>
+					<!-- END REGIONAL STATS PORTLET-->
+				</div>
+				
+				<div class="span3">
+					<!-- BEGIN REGIONAL STATS PORTLET-->
+					<div class="portlet">
+						<div class="portlet-title">
+							<h4><i class="icon-globe"></i>热门关键词展示</h4>
+							<div class="tools">
+								<a href="javascript:;" class="reload"></a>
+							</div>
+						</div>
+						<div class="portlet-body">
+						<embed type="application/x-shockwave-flash" src="/assets/swf/tagcloud.swf" width="230" height="200" id="tagcloudflash" name="tagcloudflash" bgcolor="" quality="high" allowscriptaccess="always" flashvars="tcolor=0x000000&amp;tcolor2=0x000000&amp;hicolor=0xffffff&amp;tspeed=100&amp;distr=true&amp;mode=both&amp;tagcloud=<%= tagcloud %>">
+						</div>
+					</div>
+					<!-- END REGIONAL STATS PORTLET-->
+				</div>
+
+
+				<div class="span3">
+					<!-- BEGIN REGIONAL STATS PORTLET-->
+					<div class="portlet">
+						<div class="portlet-title">
+							<h4><i class="icon-globe"></i>需要处理信息</h4>
+							<div class="tools">										
+								<a href="javascript:;" class="reload"></a>
+							</div>
+						</div>
+						<div class="portlet-body">
+						<ul class="feeds">
+							<li>
+								<div class="col1">
+									<div class="cont">
+										<div class="cont-col1">
+											<div class="label label-success">								
+												<i class="icon-bell"></i>
+											</div>
+										</div>
+										<div class="cont-col2">
+											<div class="desc">
+												危机级信息<%= alert_num %>条
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</li>
+							<li>
+									<div class="col1">
+										<div class="cont">
+											<div class="cont-col1">
+												<div class="label label-important">								
+													<i class="icon-bolt"></i>
+												</div>
+											</div>
+											<div class="cont-col2">
+												<div class="desc">
+													负面信息<%= info_negative_num %>条							
+												</div>
+											</div>
+										</div>
+									</div>
+							</li>
+							<li>
+									<div class="col1">
+										<div class="cont">
+											<div class="cont-col1">
+												<div class="label label-info">								
+													<i class="icon-bullhorn"></i>
+												</div>
+											</div>
+											<div class="cont-col2">
+												<div class="desc">
+													需预警的信息<%= message_num%>条
+												</div>
+											</div>
+										</div>
+									</div>
+							</li>
+							<li>
+									<div class="col1">
+										<div class="cont">
+											<div class="cont-col1">
+												<div class="label label-warning">								
+													<i class="icon-plus"></i>
+												</div>
+											</div>
+											<div class="cont-col2">
+												<div class="desc">
+													关注信息12条
+												</div>
+											</div>
+										</div>
+									</div>
+							</li>
+						</ul>
+						</div>
+					</div>
+					<!-- END REGIONAL STATS PORTLET-->
+				</div>
+
+				</div>
+				<div class="clearfix"></div>
+				<div class="row-fluid">
+					
+					
+				</div>
+				<div class="clearfix"></div>
+				<div class="row-fluid">
+					
+
+				</div>
+			</div>
+		</div>
+
+	    <!-- END PAGE CONTENT-->
+	    </div>
+	    <!-- END PAGE CONTAINER-->    
+	  </div>
+	  <!-- END PAGE -->
+	</div>
+	<!-- END CONTAINER -->
+<script>
+$(function() {
+	var handleDashboardCharts2 = function () {
+        if (!jQuery.plot) {
+            return;
+        }
+
+        var data = [];
+        var totalPoints = 250;
+
+        // random data generator for plot charts
+        function getRandomData() {
+            if (data.length > 0) data = data.slice(1);
+            // do a random walk
+            while (data.length < totalPoints) {
+                var prev = data.length > 0 ? data[data.length - 1] : 50;
+                var y = prev + Math.random() * 10 - 5;
+                if (y < 0) y = 0;
+                if (y > 100) y = 100;
+                data.push(y);
+            }
+            // zip the generated y values with the x values
+            var res = [];
+            for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+            return res;
+        }
+
+        function showTooltip(title, x, y, x1,x2) {
+            $('<div id="tooltip" class="chart-tooltip"><div class="date">' + title + '<\/div><div class="label label-success">舆情总数: ' + x1 + '<\/div><div class="label label-important">负面信息: ' + x2 + '<\/div><\/div>').css({
+                position: 'absolute',
+                display: 'none',
+                top: y - 100,
+                width: 85,
+                left: x - 40,
+                border: '0px solid #ccc',
+                padding: '6px 6px',
+                'background-color': '#fff',
+            }).appendTo("body").fadeIn(200);
+        }
+
+        function randValue() {
+            return (Math.floor(Math.random() * (1 + 50 - 20))) + 10;
+        }
+        
+        var data3=$("#overview_info_nums").html().split(";");
+        
+        var data2=$("#overview_info_nagtive_nums").html().split(";");
+
+        var alldata=[{
+            data: [],
+            label: "舆情信息总数"
+        }, {
+            data: [],
+            label: "负面信息总数"
+        }];
+        //alert(data3[0][0]]);
+        var cartograms = "";
+		if (data3.length > 0) {
+
+			cartograms = {
+				xaxis : {
+					tickInterval : parseInt((data3.length + 5) / 10),
+					ticks: [],
+					labelWidth:60
+				}
+				
+			};
+			
+			for(var i in data3){
+				var tempdata = data3[i].split(",")
+				var tempdata2 = data2[i].split(",")
+				alldata[0].data.push([i,tempdata[1]]);
+				alldata[1].data.push([i,tempdata2[1]]);
+				if(i%2==0){
+                    
+					cartograms.xaxis.ticks.push([i,tempdata[0]]);
+				}
+			}	
+			
+		}
+
+        $('#site_statistics_loading').hide();
+        $('#site_statistics_content').show();
+
+        var plot_statistics = $.plot($("#site_statistics"), alldata, $.extend(true,cartograms,{
+            series: {
+                lines: {
+                    show: true,
+                    lineWidth: 2,
+                    fill: true,
+                    fillColor: {
+                        colors: [{
+                            opacity: 0.05
+                        }, {
+                            opacity: 0.01
+                        }]
+                    }
+                },
+                points: {
+                    show: true
+                },
+                shadowSize: 2
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                tickColor: "#eee",
+                borderWidth: 0
+            },
+            colors: [ "#37b7f3","#d12610", "#52e136"],
+           
+            
+            
+        }));
+
+        var previousPoint = null;
+        $("#site_statistics").bind("plothover", function (event, pos, item) {
+      
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+
+                    $("#tooltip").remove();
+                    var x = alldata[0].data[item.dataIndex][1],
+                        y = alldata[1].data[item.dataIndex][1];
+
+                    showTooltip("", item.pageX, item.pageY, x,y);
+                }
+            } else {
+                $("#tooltip").remove();
+                previousPoint = null;
+            }
+        });
+ 	    }
+	
+	
+	var handlethemap = function (){
+		 //数据可以动态生成，格式自己定义，cha对应china-zh.js中省份的简称
+		 
+        var dataStatus = <%= dataStatus %>;
+        // alert(dataStatus);
+        /* [{ cha: 'HKG', name: '香港', des: '<br/>无舆情信息' },
+                         { cha: 'HAI', name: '海南', des: '<br/>无舆情信息' },
+                         { cha: 'YUN', name: '云南', des: '<br/>无舆情信息' },
+                         { cha: 'BEJ', name: '北京', des: '<br/>2个舆情信息' },
+                         { cha: 'TAJ', name: '天津', des: '<br/>无舆情信息' },
+                         { cha: 'XIN', name: '新疆', des: '<br/>无舆情信息' },
+                         { cha: 'TIB', name: '西藏', des: '<br/>无舆情信息' },
+                         { cha: 'QIH', name: '青海', des: '<br/>无舆情信息' },
+                         { cha: 'GAN', name: '甘肃', des: '<br/>无舆情信息' },
+                         { cha: 'NMG', name: '内蒙古', des: '<br/>无舆情信息' },
+                         { cha: 'NXA', name: '宁夏', des: '<br/>无舆情信息' },
+                         { cha: 'SHX', name: '山西', des: '<br/>无舆情信息' },
+                         { cha: 'LIA', name: '辽宁', des: '<br/>无舆情信息' },
+                         { cha: 'JIL', name: '吉林', des: '<br/>无舆情信息' },
+                         { cha: 'HLJ', name: '黑龙江', des: '<br/>无舆情信息' },
+                         { cha: 'HEB', name: '河北', des: '<br/>无舆情信息' },
+                         { cha: 'SHD', name: '山东', des: '<br/>无舆情信息' },
+                         { cha: 'HEN', name: '河南', des: '<br/>无舆情信息' },
+                         { cha: 'SHA', name: '陕西', des: '<br/>无舆情信息' },
+                         { cha: 'SCH', name: '四川', des: '<br/>无舆情信息' },
+                         { cha: 'CHQ', name: '重庆', des: '<br/>无舆情信息' },
+                         { cha: 'HUB', name: '湖北', des: '<br/>1个舆情信息' },
+                         { cha: 'ANH', name: '安徽', des: '<br/>无舆情信息' },
+                         { cha: 'JSU', name: '江苏', des: '<br/>4个舆情信息' },
+                         { cha: 'SHH', name: '上海', des: '<br/>1个舆情信息' },
+                         { cha: 'ZHJ', name: '浙江', des: '<br/>无舆情信息' },
+                         { cha: 'FUJ', name: '福建', des: '<br/>无舆情信息' },
+                         { cha: 'TAI', name: '台湾', des: '<br/>无舆情信息' },
+                         { cha: 'JXI', name: '江西', des: '<br/>无舆情信息' },
+                         { cha: 'HUN', name: '湖南', des: '<br/>无舆情信息' },
+                         { cha: 'GUI', name: '贵州', des: '<br/>无舆情信息' },
+                         { cha: 'GXI', name: '广西', des: '<br/>无舆情信息' }, 
+                         { cha: 'GUD', name: '广东', des: '<br/>无舆情信息'}]; */
+        $('#vmap_china').vectorMap({ map: 'china_zh',
+            color: "#B4B4B4", //地图颜色
+            onLabelShow: function (event, label, code) {//动态显示内容
+                $.each(dataStatus, function (i, items) {
+                    if (code == items.cha) {
+                        label.html(items.name + items.des);
+                    }
+                });
+            }
+        })
+        
+        
+        
+        $.each(dataStatus, function (i, items) {
+            if (items.des.indexOf('条') != -1) {//动态设定颜色，此处用了自定义简单的判断
+            	if(parseInt((items.des.substring(5,items.des.indexOf('条'))))<3){
+                	var josnStr = "{" + items.cha + ":'#27a9e3'}";
+            	}else if(parseInt((items.des.substring(5,items.des.indexOf('条'))))<6){
+            		var josnStr = "{" + items.cha + ":'#1e92c6'}";
+            	}else if(parseInt((items.des.substring(5,items.des.indexOf('条'))))<9){
+            		var josnStr = "{" + items.cha + ":'#117dad'}";
+            	}else{
+            		var josnStr = "{" + items.cha + ":'#035e87'}";
+            	}
+                $('#vmap_china').vectorMap('set', 'colors', eval('(' + josnStr + ')'));
+            }
+        });
+        $('.jvectormap-zoomin').click(); //放大
+        
+	}
+	
+	
+	
+	
+    var handleChartGraphs = function () {
+
+        var graphData = [];
+        var s_array=['正面','中性','负面'];
+        var v_array=[<%= info_positive_num %>,<%= info_neutral_num %>,<%= info_negative_num %>];
+        var series = 3;
+        for (var i = 0; i < series; i++) {
+            graphData[i] = {
+                label: s_array[i],
+                data: v_array[i]
+            }
+        }
+
+        $.plot($("#graph_1"), graphData, {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 1,
+                        formatter: function (label, series) {
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + label + '<br/>' +  parseFloat(series.percent).toFixed(1) + '%</div>';
+                        },
+                        background: {
+                            opacity: 0.8
+                        }
+                    }
+                }
+            },
+            grid: {
+                hoverable: true,
+                clickable: true
+            }
+        });
+
+        function pieHover(event, pos, obj) {
+            if (!obj) return;
+            percent = parseFloat(obj.series.percent).toFixed(3);
+            $("#hover").html('<span style="font-weight: bold; color: ' + obj.series.color + '">' + obj.series.label + ' (' + percent + '%)</span>');
+        }
+
+        function pieClick(event, pos, obj) {
+            if (!obj) return;
+            percent = parseFloat(obj.series.percent).toFixed(3);
+            alert('' + obj.series.label + ': ' + percent + '%');
+        }
+	        
+    }
+    
+    
+    
+    
+ 	  	handleDashboardCharts2();
+ 	  	handleChartGraphs();
+ 	  	handlethemap();
+ 	   
+ 	  	
+ 	  	
+ 	  	
+ 	   
+		
+	});
+</script

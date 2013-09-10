@@ -1,0 +1,128 @@
+<title>TBS-IWOM:渠道来源展示</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+  <!-- BEGIN PAGE CONTAINER-->
+  <div class="container-fluid">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="row-fluid">
+      <div class="span12">  
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
+        <h3 class="page-title">
+          <span class="main_title" id="infosource">舆情展示</span>
+          <small>所有相关舆情的展示</small>
+        </h3>
+        <ul class="breadcrumb">
+          <li>
+            <i class="icon-home"></i>
+            <a href="#">舆情展示</a> 
+            <i class="icon-angle-right"></i>
+          </li>
+          <li><a href="#">渠道来源展示</a></li>
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+      </div>
+    </div>
+    <!-- END PAGE HEADER-->
+    <!-- BEGIN PAGE CONTENT-->  
+
+    <% @info_source_types.each.with_index do |info_source_type, index| %>
+      <% if index%2==0 %>
+        <div class="row-fluid">
+      <% end %>
+      <div class="span6">
+        <!-- BEGIN SAMPLE TABLE PORTLET-->
+        <div class="portlet box <%= @colors[index] %>"> 
+          <div class="portlet-title">
+            <h4><i class="icon-reorder"></i><a href="/show/<%= info_source_type.enstr %>/index"><%= info_source_type.str %></a></h4>
+            <div class="tools">
+              <a href="javascript:;" class="reload"></a>
+            </div>
+          </div>
+          <div class="portlet-body <%= info_source_type.enstr %>containt" style="height:225px;">
+            
+          </div>
+        </div>
+        <!-- END SAMPLE TABLE PORTLET-->
+      </div>
+       <% if index%2==1 %>
+        </div>
+      <% end %>
+    <% end %>
+
+
+
+    <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+<script type="text/javascript">
+$(function() {
+  
+  var myUIblock = function (el) {
+        el.block({
+            message: '<img src="/assets/img/loading.gif" align="absmiddle">',
+            css: {
+                border: 'none',
+                padding: '2px',
+                backgroundColor: 'none'
+            },
+            overlayCSS: {
+                backgroundColor: '#000',
+                opacity: 0.05,
+                cursor: 'wait'
+            }
+        });
+    }
+  
+  <% @info_source_types.each do |info_source_type| 
+     infotype = info_source_type.enstr
+  %>
+    var <%= infotype %>page = 0;
+    myUIblock($(".<%= infotype %>containt"));
+    
+    $.get("/show/bysource/<%= infotype %>/"+<%= infotype %>page).done(function(data) {
+      //alert(data);
+      $(".<%= infotype %>containt").html(data);
+    });
+    
+    
+    $("a.<%= infotype %>prev").live('click',function(){
+      if($(this).hasClass('locked')){
+        return;
+      }
+      
+      if(<%= infotype %>page>0){
+        myUIblock($(".<%= infotype %>containt"));
+        <%= infotype %>page-=1;
+        $(".<%= infotype %>containt").load("/show/bysource/<%= infotype %>/"+<%= infotype %>page);
+        $(".<%= infotype %>next").removeClass('locked');
+      }else{
+        $(".<%= infotype %>prev").addClass('locked');
+      }
+      console.log(<%= infotype %>page);
+    });
+    $("a.<%= infotype %>next").live('click',function(){
+      if($(this).hasClass('locked')){
+        return;
+      }
+      myUIblock($(".<%= infotype %>containt"));
+      <%= infotype %>page+=1;
+      $.get("/show/bysource/<%= infotype %>/"+<%= infotype %>page).done(function(data) {
+        $(".<%= infotype %>prev").removeClass('locked');
+        $(".<%= infotype %>containt").html(data);
+      })
+      .fail(function() {
+        $(".<%= infotype %>prev").addClass('locked');
+      });
+    });
+  <% end %>
+  
+});
+</script>
+
+
+

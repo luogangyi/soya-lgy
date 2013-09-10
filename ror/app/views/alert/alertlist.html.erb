@@ -1,0 +1,42 @@
+<% @alertlist.each do |info| %>
+	<tr id="<%= info.id %>" content = "<%= info.messinfo %>" url = "<%= info.url %>" class = "<%= info.info_source.info_source_type.enstr %>">
+		<td class="highlight"  width="10%" >
+			<div class="success"></div>
+			<% if info.info_source.info_source_type.enstr == "news" %>
+				<a href="#" class="source_name"><%= info.source_name %></a>
+			<% else %>
+				<a href="#" class="source_name"><%= info.info_source.str %></a>
+			<% end %>
+			
+		</td>
+		<td width="45%" style="word-break: break-all;" class="infoconent">
+		<% if info.info_source.info_source_type.enstr== "weibo" %>
+			<a href="/inbox/single/<%= info.info_source.info_source_type.enstr %>/<%= info.id %>"><%= info.weibo_user_screen_name %>:<%= info.text%></a>
+			
+		<% else  %>
+			<a href="/inbox/single/<%= info.info_source.info_source_type.enstr %>/<%= info.id %>"><%= info.title %></a>
+		<% end %>
+
+		</td>
+		<td width="10%"><ul class="stars stars<%= info.urgency %>"></ul></td>
+		<td width="15%">
+			<% if has_email_alert? %>
+			<a class="btn mini green sendmail" href="#myModal" role="button"  data-toggle="modal"><i class="icon-envelope"></i>邮件</a>
+			<% end %>
+			<% if has_sms_alert? %>
+			<a href="#myModal2" class="btn mini blue sendsms"  data-toggle="modal"><i class="icon-comment-alt"></i>短信</a>
+			<% end %>
+		</td>
+		<td width="20%">
+			<a href="javascript:;" class="btn mini ignorebtn"><i class="icon-trash"></i>取消预警</a>
+			<a href="javascript:;" class="btn mini handlebtn"><i class="icon-legal"></i>完成</a>
+		</td>
+	</tr>
+<% end %>
+
+
+<script>
+$(function(){
+	$('#myModal').modal("hide");
+});
+</script>

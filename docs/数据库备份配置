@@ -1,0 +1,7 @@
+参考 http://ruby-china.org/topics/4710
+
+gem install backup
+backup generate:model --trigger tbs_backup --databases="mysql" --storages="dropbox"
+
+# vim ~/.gemrc
+

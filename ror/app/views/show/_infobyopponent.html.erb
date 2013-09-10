@@ -1,0 +1,15 @@
+<% info = infobyopponent %>
+
+<blockquote cite="weibo-list" id="<%= info.id %>" key="<%= info.opponent_keyword.str %>">
+
+	<p style="font-size:15px;line-height:1.5;">
+		<a class="mytitle"><%= info.title %>:</a><br>
+		<span class="weibo-txt"><%= info.content %></span>
+	</p>
+	<small>
+			<a><%= info.source_name %></a>|
+			<a href="<%= info.url %>" target="_blank">原链接</a>|
+			<a><%= info.created_at.localtime.to_s(:db) %></a>
+	</small>	
+
+</blockquote>

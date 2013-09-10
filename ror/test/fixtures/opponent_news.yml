@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  source_name: MyString
+  info_source: 
+  opponent_keyword: 
+  title: MyString
+  content: MyString
+
+two:
+  source_name: MyString
+  info_source: 
+  opponent_keyword: 
+  title: MyString
+  content: MyString

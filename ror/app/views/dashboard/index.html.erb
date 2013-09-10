@@ -1,0 +1,434 @@
+<title>分析与报告</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="dashboard">分析与报告</span>	
+					<small>对数据进行可视化分析</small>
+					
+				</h3>
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href="/alert">分析与报告</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">首页</a></li>
+					 <li class="pull-right no-text-shadow">
+			            <div id="filter" class="filter">
+			              时间：
+			              <select name="" id="year" style="width:80px">
+			                <% for i in 2013..Time.now.year %>
+			                    <option value="<%= i %>"><%= i %>年</option>
+			                <% end %>
+			              </select> 至 
+			              <select name="" id="month">
+			                <% for i in 1..12 %>
+			                    <option value="<%= i %>"><%= i %>月</option>
+			                <% end %>
+			              </select>
+			              <button id="conditionSearch" class="gray-btn add-btn ok_btn">应用</button>
+			            </div>      
+			          </li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+		<!-- BEGIN PAGE CONTENT-->				
+
+			<div class="row-fluid">
+				<div class="span12">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet solid bordered light-grey">
+						<div class="portlet-title">
+							<h4><i class="icon-bar-chart"></i>当月舆情走势</h4>
+							<div class="tools">
+								<div class="btn-group pull-right" data-toggle="buttons-radio">
+								</div>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div id="site_statistics_loading">
+								<img src="/assets/img/loading.gif" alt="loading" />
+							</div>
+							<div id="site_statistics_content" class="hide">
+								<div id="month_report" class="chart"></div>
+							</div>
+						</div>
+						<div class="hidden" id="dashboard_info_nums"><%=  dashboard_info_nums %></div>
+						
+					</div>
+					<!-- END PORTLET-->
+				</div>
+			</div>
+			<div class="clearfix"></div>
+
+
+	    	<% Label.where(:category_id => 2).each_with_index do |label, index| %>
+	      	<% if index%2==0 %>
+	        <div class="row-fluid">
+	     	<% end %>
+
+				<div class="span6">
+					<!-- BEGIN PORTLET-->
+					<div class="portlet solid bordered light-grey">
+						<div class="portlet-title">
+							<h4><i class="icon-bar-chart"></i>当月正负面舆情走势</h4>
+							<div class="tools">
+								<div class="btn-group pull-right" data-toggle="buttons-radio">
+								</div>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<div id="site_statistics_loading<%= index %>">
+								<img src="/assets/img/loading.gif" alt="loading" />
+							</div>
+							<div id="site_statistics_content<%= index %>" class="hide">
+								<div id="month_report<%= index %>" class="chart"></div>
+							</div>
+						</div>
+						
+					</div>
+					<!-- END PORTLET-->
+				</div>
+
+			<% if index%2==1 %>
+	        </div>
+	       	<% end %>
+	       	<% end %>
+
+		<!-- END PAGE CONTENT-->
+	</div>
+	<!-- END PAGE CONTAINER-->		
+</div>
+<!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+
+<script>
+$(function() {
+	var handleDashboardCharts2 = function () {
+        if (!jQuery.plot) {
+            return;
+        }
+
+        var data = [];
+        var totalPoints = 250;
+
+        // random data generator for plot charts
+        function getRandomData() {
+            if (data.length > 0) data = data.slice(1);
+            // do a random walk
+            while (data.length < totalPoints) {
+                var prev = data.length > 0 ? data[data.length - 1] : 50;
+                var y = prev + Math.random() * 10 - 5;
+                if (y < 0) y = 0;
+                if (y > 100) y = 100;
+                data.push(y);
+            }
+            // zip the generated y values with the x values
+            var res = [];
+            for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+            return res;
+        }
+
+        function showTooltip(title, x, y,x0<% Label.where(:category_id => 2).each_with_index do |label,index| %> ,x<%= index +1 %> <% end %>) {
+            $('<div id="tooltip" class="chart-tooltip"><div class="date">' + title + '<\/div><div class="label">舆情总数: ' + x + '<\/div><% Label.where(:category_id => 2).each_with_index do |label,index| %><div class="label"><%= label.str %>: ' + x<%= index +1 %> + '<\/div> <% end %><\/div>').css({
+                position: 'absolute',
+                display: 'none',
+                top: y - 100,
+                width: 85,
+                left: x - 40,
+                border: '0px solid #ccc',
+                padding: '6px 6px',
+                'background-color': '#fff',
+            }).appendTo("body").fadeIn(200);
+        }
+
+        function randValue() {
+            return (Math.floor(Math.random() * (1 + 50 - 20))) + 10;
+        }
+        
+        var data3=$("#dashboard_info_nums").html().split(";");
+
+        <% Label.where(:category_id => 2).each_with_index do |label,index| %> 
+
+        var mydata<%= label.id %> = "<%= dashboard_info_nums_labels_array[index] %>".split(";");
+
+        <% end %>
+        var alldata=[{
+            data: [],
+            label: "舆情信息总数"
+        }<% Label.where(:category_id => 2).each do |label| %>
+        ,{
+            data: [],
+            label: "<%= label.str %>"
+        }<% end %>];
+        //alert(data3[0][0]]);
+        var cartograms = "";
+		if (data3.length > 0) {
+
+			cartograms = {
+				xaxis : {
+					tickInterval : parseInt((data3.length + 5) / 10),
+					ticks: [],
+					labelWidth:60
+				}
+				
+			};
+			
+			for(var i in data3){
+				var tempdata = data3[i].split(",");
+				alldata[0].data.push([i,tempdata[1]]);
+
+				<% Label.where(:category_id => 2).each_with_index do |label,index| %>
+
+				var tempdata<%= index+1 %> = mydata<%= label.id %>[i].split(",");
+				alldata[<%= index+1 %>].data.push([i,tempdata<%= index+1 %>[1]]);
+				
+				<% end %>
+
+
+				if(i%2==0){
+                    
+					cartograms.xaxis.ticks.push([i,tempdata[0]]);
+				}
+			}	
+			
+		}
+
+        $('#site_statistics_loading').hide();
+        $('#site_statistics_content').show();
+
+        var plot_statistics = $.plot($("#month_report"), alldata, $.extend(true,cartograms,{
+            series: {
+                lines: {
+                    show: true,
+                    lineWidth: 2,
+                    fill: true,
+                    fillColor: {
+                        colors: [{
+                            opacity: 0.05
+                        }, {
+                            opacity: 0.01
+                        }]
+                    }
+                },
+                points: {
+                    show: true
+                },
+                shadowSize: 2
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                tickColor: "#eee",
+                borderWidth: 0
+            },
+            colors: [ "#37b7f3","#d12610", "#52e136"],
+           
+            
+            
+        }));
+
+        var previousPoint = null;
+        $("#month_report").bind("plothover", function (event, pos, item) {
+      
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+
+                    $("#tooltip").remove();
+                    var x = alldata[0].data[item.dataIndex][1];
+                    <% Label.where(:category_id => 2).each_with_index do |label,index| %>
+   
+                      var x<%= index +1 %> = alldata[<%= index +1 %>].data[item.dataIndex][1];
+
+                    <% end %>
+                    
+
+                    showTooltip("", item.pageX, item.pageY, x<% Label.where(:category_id => 2).each_with_index do |label,index| %> ,x<%= index +1 %> <% end %>);
+                }
+            } else {
+                $("#tooltip").remove();
+                previousPoint = null;
+            }
+        });
+ 	    }
+
+
+
+ 	<% Label.where(:category_id => 2).each_with_index do |label,index| %>
+
+
+	var handleDashboardChartslabel<%= index %> = function () {
+        if (!jQuery.plot) {
+            return;
+        }
+
+        var data = [];
+        var totalPoints = 250;
+
+        // random data generator for plot charts
+        function getRandomData() {
+            if (data.length > 0) data = data.slice(1);
+            // do a random walk
+            while (data.length < totalPoints) {
+                var prev = data.length > 0 ? data[data.length - 1] : 50;
+                var y = prev + Math.random() * 10 - 5;
+                if (y < 0) y = 0;
+                if (y > 100) y = 100;
+                data.push(y);
+            }
+            // zip the generated y values with the x values
+            var res = [];
+            for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+            return res;
+        }
+
+        function showTooltip(title, x, y,x1,x2) {
+            $('<div id="tooltip<%= index %>" class="chart-tooltip"><div class="date">' + title + '<\/div><div class="label">正面信息: ' + x1 + '<\/div><div class="label">负面信息: ' + x2 + '<\/div>').css({
+                position: 'absolute',
+                display: 'none',
+                top: y - 100,
+                width: 85,
+                left: x - 40,
+                border: '0px solid #ccc',
+                padding: '6px 6px',
+                'background-color': '#fff',
+            }).appendTo("body").fadeIn(200);
+        }
+
+        function randValue() {
+            return (Math.floor(Math.random() * (1 + 50 - 20))) + 10;
+        }
+        
+
+        var mydata1 = "<%= dashboard_info_nums_labels_positive_array[index] %>".split(";");
+        var mydata2 = "<%= dashboard_info_nums_labels_negative_array[index] %>".split(";");
+
+
+        var alldata=[{
+            data: [],
+            label: "正面信息"
+        },{
+            data: [],
+            label: "负面信息"
+        }];
+        //alert(data3[0][0]]);
+        var cartograms = "";
+
+		if (mydata1.length > 0) {
+
+			cartograms = {
+				xaxis : {
+					tickInterval : parseInt((mydata1.length + 5) / 10),
+					ticks: [],
+					labelWidth:60
+				}
+				
+			};
+			
+			for(var i in mydata1){
+				var tempdata = mydata1[i].split(",");
+				alldata[0].data.push([i,tempdata[1]]);
+
+				var tempdata1 = mydata2[i].split(",");
+
+				alldata[1].data.push([i,tempdata1[1]]);
+
+				if(i%2==0){
+					cartograms.xaxis.ticks.push([i,tempdata[0]]);
+				}
+			}	
+			
+		}
+
+        $('#site_statistics_loading<%= index %>').hide();
+        $('#site_statistics_content<%= index %>').show();
+
+        var plot_statistics = $.plot($("#month_report<%= index %>"), alldata, $.extend(true,cartograms,{
+            series: {
+                lines: {
+                    show: true,
+                    lineWidth: 2,
+                    fill: true,
+                    fillColor: {
+                        colors: [{
+                            opacity: 0.05
+                        }, {
+                            opacity: 0.01
+                        }]
+                    }
+                },
+                points: {
+                    show: true
+                },
+                shadowSize: 2
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                tickColor: "#eee",
+                borderWidth: 0
+            },
+            colors: [ "#37b7f3","#d12610", "#52e136"],
+           
+            
+            
+        }));
+
+        var previousPoint = null;
+        $("#month_report<%= index %>").bind("plothover", function (event, pos, item) {
+      
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+
+                    $("#tooltip<%= index %>").remove();
+                    var x1 = alldata[0].data[item.dataIndex][1];
+
+                    var x2 = alldata[1].data[item.dataIndex][1];
+                    
+
+                    showTooltip("", item.pageX, item.pageY, x1, x2);
+                }
+            } else {
+                $("#tooltip<%= index %>").remove();
+                previousPoint = null;
+            }
+        });
+ 	    }
+
+ 	    handleDashboardChartslabel<%= index %>();
+
+ 	    <% end %>
+
+
+
+
+
+
+ 	    handleDashboardCharts2();
+
+
+
+ 	});
+
+
+
+
+
+
+
+
+</script>
+
+

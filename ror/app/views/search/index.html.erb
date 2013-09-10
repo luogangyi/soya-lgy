@@ -1,0 +1,166 @@
+<!-- BEGIN PAGE -->
+<div class="page-content">
+  <!-- BEGIN PAGE CONTAINER-->
+  <div class="container-fluid">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="row-fluid">
+      <div class="span12">  
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
+        <h3 class="page-title">
+          <span class="main_title" id="">搜索结果</span>
+          <small>展示搜索相关结果</small>
+        </h3>
+        <ul class="breadcrumb">
+          <li>
+            <i class="icon-home"></i>
+            <a href="#">搜索</a> 
+            <i class="icon-angle-right"></i>
+          </li>
+          <li><a href="#"><%= sub_query_str(@query) %>(共有<%= @results.total_entries %>条结果)</a></li>
+          <li class="pull-right no-text-shadow">
+            <div id="filter" class="filter">
+              时间：<input type="text" id="startTime" readonly="">
+              <select name="" id="startHours">
+                <% for i in 0..23 %>
+                    <option value="<%= i %>"><%= i %>时</option>
+                <% end %>
+              </select> 至 <input type="text" id="endTime" readonly=""> 
+              <select name="" id="endHours">
+                <% for i in 0..23 %>
+                    <option value="<%= i %>"><%= i %>时</option>
+                <% end %>
+              </select>
+              <select name="" id="order" style="width:80px;">
+                <option value="time">时间顺序</option>
+                <option value="urgency">预警级别</option>
+              </select>
+              <select name="" id="emotion">
+                <option value="0">---</option>
+                <option value="1">正面</option>
+                <option value="3">中性</option>
+                <option value="2">负面</option>
+              </select>
+              <button id="conditionSearch" class="gray-btn add-btn ok_btn" style="margin-right:0;">应用</button>
+              <button id="conditionSearch" class="gray-btn add-btn excel_btn">下载</button>
+            </div>      
+          </li>
+
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+      </div>
+    </div>
+    <!-- END PAGE HEADER-->
+    <!-- BEGIN PAGE CONTENT--> 
+
+
+<div class="row-fluid">
+	<div class="span12 maincontent">
+
+	</div>
+</div>
+
+
+
+
+    <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER --> 
+
+<script type="text/javascript">
+
+var pagenum=1;
+var start=0;
+var end=0;
+var order="time";
+var emotion="0";
+
+
+
+
+function highlight(selector){
+  selector.each(function(){
+    var regEx = new RegExp(/ *@([{\u4e00-\u9fa5}A-Za-z0-9_-]*) ?/g);
+    var str = $(this).text();
+    var tmpstr=str.replace(regEx, "<a>@$1</a>");
+    var keywords= $(this).parent().parent().attr('key');
+    var keys=keywords.split(" ");
+    for(var i=0;i<keys.length;i++){
+      var reg=new RegExp("("+keys[i]+")","g"); 
+      tmpstr=tmpstr.replace(reg,"<em>$1</em>");
+    }
+    $(this).html(tmpstr);
+    
+  });
+  
+}
+
+window.onscroll = function() {
+  var winScroll = document.documentElement.scrollTop
+      || document.body.scrollTop;
+  //console.log(winScroll+'  '+(document.body.offsetHeight - document.documentElement.clientHeight));
+  if (winScroll == (document.body.offsetHeight - document.documentElement.clientHeight+42)) {
+    
+    loadMore();
+
+  }
+};
+
+function loadMore() {
+  $("#alert").show();
+
+  $.get("/search/searchlist?query=<%= @query %>&page="+pagenum+"&d1="+start+"&d2="+end+"&sentiment="+emotion+"&sortType="+order,
+      function(data) {
+        $(".maincontent").append(data);
+        $("#alert").hide();
+        highlight($(".weibo-txt"));
+        pagenum++;
+      }).error(function() {
+    alert("已经全部加载完毕");
+  });
+}
+
+$(function() {
+
+  loadMore();
+
+  $(".ok_btn").live('click',function(){
+    var dStartTime = $('#startTime');
+    var dEndTime = $('#endTime');
+    var dStartHours = $('#startHours');
+    var dEndHours = $('#endHours');
+    var d1=dStartTime.val()+" "+dStartHours.val()+":00:00";
+    var d2=dEndTime.val()+" "+dEndHours.val()+":59:00";
+    order=$("#order").val();
+    emotion=$("#emotion").val();
+    start=new Date(d1).getTime();
+    end=new Date(d2).getTime();
+    
+    pagenum=1;
+    //alert(order);
+    $(".maincontent").html("");
+    //alert("${ctx}/show/"+type+"?page=" + p +"&d1=" + start+"&d2=" + end);
+    loadMore();
+  });
+
+  $(".excel_btn").live('click',function(){
+    var dStartTime = $('#startTime');
+    var dEndTime = $('#endTime');
+    var dStartHours = $('#startHours');
+    var dEndHours = $('#endHours');
+    var d1=dStartTime.val()+" "+dStartHours.val()+":00:00";
+    var d2=dEndTime.val()+" "+dEndHours.val()+":59:00";
+    order=$("#order").val();
+    emotion=$("#emotion").val();
+    start=new Date(d1).getTime();
+    end=new Date(d2).getTime();
+    window.open("/search/downloads?query=<%= params[:query] %>&d1="+start+"&d2="+end+"&sentiment="+emotion+"&sortType="+order);
+
+  });
+
+});
+
+</script>

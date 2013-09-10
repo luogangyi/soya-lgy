@@ -1,0 +1,525 @@
+<title>分析与报告</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="report3">分析与报告</span>	
+					<small>对数据进行可视化分析</small>
+					
+				</h3>
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href="/alert">分析与报告</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">首页</a></li>
+					 <li class="pull-right no-text-shadow">
+			            <div id="filter" class="filter">
+			              时间：
+			              <select name="" id="year" style="width:80px">
+			                <% for i in 2013..Time.now.year %>
+			                    <option value="<%= i %>"><%= i %>年</option>
+			                <% end %>
+			              </select> 至 
+			              <select name="" id="month">
+			                <% for i in 1..12 %>
+			                    <option value="<%= i %>"><%= i %>月</option>
+			                <% end %>
+			              </select>
+			              <button id="conditionSearch" class="gray-btn add-btn ok_btn">应用</button>
+			            </div>      
+			          </li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+		<!-- BEGIN PAGE CONTENT-->				
+        <div class="row-fluid">
+ 
+                <div class="span12">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet solid bordered light-grey">
+                        <div class="portlet-title">
+                            <h4><i class="icon-bar-chart"></i>当月舆情预警等级走势</h4>
+                            <div class="tools">
+                                <div class="btn-group pull-right" data-toggle="buttons-radio">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="site_statistics_loading">
+                                <img src="/assets/img/loading.gif" alt="loading" />
+                            </div>
+                            <div id="site_statistics_content">
+                                <div id="container" class="chart"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+		</div>
+
+          <% Label.where(:category_id => 2).each_with_index do |label, index| %>
+            
+            <% if index%2==0 %>
+            <div class="row-fluid">
+            <% end %>
+ 
+                <div class="span6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet solid bordered light-grey">
+                        <div class="portlet-title">
+                            <h4><i class="icon-bar-chart"></i>当月<%= label.str%>预警等级走势</h4>
+                            <div class="tools">
+                                <div class="btn-group pull-right" data-toggle="buttons-radio">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="site_statistics_loading<%= index %>">
+                                <img src="/assets/img/loading.gif" alt="loading" />
+                            </div>
+                            <div id="site_statistics_content<%= index %>">
+                                <div id="container<%= index %>" class="chart"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+                    <!-- END PORTLET-->
+            <% if index%2==1 %>
+            </div>
+            <% end %>
+
+            <% end %>   
+
+
+                <div class="span6">
+                    <!-- BEGIN PORTLET-->
+                    <div class="portlet solid bordered light-grey">
+                        <div class="portlet-title">
+                            <h4><i class="icon-bar-chart"></i>当月整体预警等级走势</h4>
+                            <div class="tools">
+                                <div class="btn-group pull-right" data-toggle="buttons-radio">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="site_statistics_loadingT">
+                                <img src="/assets/img/loading.gif" alt="loading" />
+                            </div>
+                            <div id="site_statistics_contentT">
+                                <div id="containerT" class="chart"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- END PORTLET-->
+                </div>
+
+
+
+		<!-- END PAGE CONTENT-->
+	</div>
+	<!-- END PAGE CONTAINER-->		
+</div>
+<!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+
+<script>
+$(function() {
+
+       Highcharts.theme = {
+   colors: ['#50B432', '#ED561B','#058DC7',  '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+   chart: {
+     
+   },
+   title: {
+      style: {
+         color: '#000',
+         font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+      }
+   },
+   subtitle: {
+      style: {
+         color: '#666666',
+         font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+      }
+   },
+   xAxis: {
+      gridLineWidth: 1,
+      lineColor: '#000',
+      tickColor: '#000',
+      labels: {
+         style: {
+            color: '#000',
+            font: '11px Trebuchet MS, Verdana, sans-serif'
+         }
+      },
+      title: {
+         style: {
+            color: '#333',
+            fontWeight: 'bold',
+            fontSize: '12px',
+            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+
+         }
+      }
+   },
+   yAxis: {
+      minorTickInterval: 'auto',
+      lineColor: '#000',
+      lineWidth: 1,
+      tickWidth: 1,
+      tickColor: '#000',
+      labels: {
+         style: {
+            color: '#000',
+            font: '11px Trebuchet MS, Verdana, sans-serif'
+         }
+      },
+      title: {
+         style: {
+            color: '#333',
+            fontWeight: 'bold',
+            fontSize: '12px',
+            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+         }
+      }
+   },
+   legend: {
+      itemStyle: {
+         font: '9pt Trebuchet MS, Verdana, sans-serif',
+         color: 'black'
+
+      },
+      itemHoverStyle: {
+         color: '#039'
+      },
+      itemHiddenStyle: {
+         color: 'gray'
+      }
+   },
+   labels: {
+      style: {
+         color: '#99b'
+      }
+   },
+
+   navigation: {
+      buttonOptions: {
+         theme: {
+            stroke: '#CCCCCC'
+         }
+      }
+   }
+};
+
+    $(".ok_btn").click(function(){
+        var year = $("#year").val();
+        var month = $("#month").val();
+        
+        window.location.href="/dashboard/report3?year="+year+"&month="+month;
+    });
+    $('#site_statistics_loading').hide();
+    $('#site_statistics_content').show();
+    $('#container').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '舆情预警等级走势'
+            },
+            xAxis: {
+                categories: [<%= raw myxAxis %>]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '信息数目'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -100,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColorSolid) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.x +'</b><br/>'+
+                        this.series.name +': '+ this.y +'<br/>'+
+                        'Total: '+ this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series: [{
+                name: '等级一',
+                data: [<%= urgencys_day_num_array[0] %>]
+            }, {
+                name: '等级二',
+                data: [<%= urgencys_day_num_array[1] %>]
+            }, {
+                name: '等级三',
+                data: [<%= urgencys_day_num_array[2] %>]
+            }, {
+                name: '等级四',
+                data: [<%= urgencys_day_num_array[3] %>]
+            }, {
+                name: '等级五',
+                data: [<%= urgencys_day_num_array[4] %>]
+            }]
+        });
+
+
+
+   <% Label.where(:category_id => 2).each_with_index do |label , index| %>
+    $('#site_statistics_loading<%= index %>').hide();
+    $('#site_statistics_content<%= index %>').show();
+
+    $('#container<%= index %>').highcharts({
+       chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: '<%= label.str %>预警级别分布'
+        },
+        tooltip: {
+            pointFormat: '{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '<%= label.str %>',
+            data: [
+                ['等级一',  <%= urgencys_mounth_num_array_labels[index][0] %>],
+                ['等级二',  <%= urgencys_mounth_num_array_labels[index][1] %>],
+                ['等级三',  <%= urgencys_mounth_num_array_labels[index][2] %>],
+                ['等级四',  <%= urgencys_mounth_num_array_labels[index][3] %>],
+                ['等级五',  <%= urgencys_mounth_num_array_labels[index][4] %>]
+            ]
+        }]
+    });
+
+
+
+       var colors = Highcharts.getOptions().colors,
+            categories = ['MSIE', 'Firefox', 'Chrome', 'Safari', 'Opera'],
+            name = 'Browser brands',
+            data = [{
+                    y: 55.11,
+                    color: colors[0],
+                    drilldown: {
+                        name: 'MSIE versions',
+                        categories: ['MSIE 6.0', 'MSIE 7.0', 'MSIE 8.0', 'MSIE 9.0'],
+                        data: [10.85, 7.35, 33.06, 2.81],
+                        color: colors[0]
+                    }
+                }, {
+                    y: 21.63,
+                    color: colors[1],
+                    drilldown: {
+                        name: 'Firefox versions',
+                        categories: ['Firefox 2.0', 'Firefox 3.0', 'Firefox 3.5', 'Firefox 3.6', 'Firefox 4.0'],
+                        data: [0.20, 0.83, 1.58, 13.12, 5.43],
+                        color: colors[1]
+                    }
+                }, {
+                    y: 11.94,
+                    color: colors[2],
+                    drilldown: {
+                        name: 'Chrome versions',
+                        categories: ['Chrome 5.0', 'Chrome 6.0', 'Chrome 7.0', 'Chrome 8.0', 'Chrome 9.0',
+                            'Chrome 10.0', 'Chrome 11.0', 'Chrome 12.0'],
+                        data: [0.12, 0.19, 0.12, 0.36, 0.32, 9.91, 0.50, 0.22],
+                        color: colors[2]
+                    }
+                }, {
+                    y: 7.15,
+                    color: colors[3],
+                    drilldown: {
+                        name: 'Safari versions',
+                        categories: ['Safari 5.0', 'Safari 4.0', 'Safari Win 5.0', 'Safari 4.1', 'Safari/Maxthon',
+                            'Safari 3.1', 'Safari 4.1'],
+                        data: [4.55, 1.42, 0.23, 0.21, 0.20, 0.19, 0.14],
+                        color: colors[3]
+                    }
+                }, {
+                    y: 2.14,
+                    color: colors[4],
+                    drilldown: {
+                        name: 'Opera versions',
+                        categories: ['Opera 9.x', 'Opera 10.x', 'Opera 11.x'],
+                        data: [ 0.12, 0.37, 1.65],
+                        color: colors[4]
+                    }
+                }];
+    
+        function setChart(name, categories, data, color) {
+            chart.xAxis[0].setCategories(categories, false);
+            chart.series[0].remove(false);
+            chart.addSeries({
+                name: name,
+                data: data,
+                color: color || 'white'
+            }, false);
+            chart.redraw();
+        }
+
+    <% end %>
+
+    $('#site_statistics_loadingT').hide();
+    $('#site_statistics_contentT').show();
+
+    $('#containerT').highcharts({
+       chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: '总体预警级别分布'
+        },
+        tooltip: {
+            pointFormat: '{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '',
+            data: [
+                ['等级一',  <%= urgencys_mounth_num_array[0] %>],
+                ['等级二',  <%= urgencys_mounth_num_array[1] %>],
+                ['等级三',  <%= urgencys_mounth_num_array[2] %>],
+                ['等级四',  <%= urgencys_mounth_num_array[3] %>],
+                ['等级五',  <%= urgencys_mounth_num_array[4] %>]
+            ]
+        }]
+    });
+
+
+
+       var colors = Highcharts.getOptions().colors,
+            categories = ['MSIE', 'Firefox', 'Chrome', 'Safari', 'Opera'],
+            name = 'Browser brands',
+            data = [{
+                    y: 55.11,
+                    color: colors[0],
+                    drilldown: {
+                        name: 'MSIE versions',
+                        categories: ['MSIE 6.0', 'MSIE 7.0', 'MSIE 8.0', 'MSIE 9.0'],
+                        data: [10.85, 7.35, 33.06, 2.81],
+                        color: colors[0]
+                    }
+                }, {
+                    y: 21.63,
+                    color: colors[1],
+                    drilldown: {
+                        name: 'Firefox versions',
+                        categories: ['Firefox 2.0', 'Firefox 3.0', 'Firefox 3.5', 'Firefox 3.6', 'Firefox 4.0'],
+                        data: [0.20, 0.83, 1.58, 13.12, 5.43],
+                        color: colors[1]
+                    }
+                }, {
+                    y: 11.94,
+                    color: colors[2],
+                    drilldown: {
+                        name: 'Chrome versions',
+                        categories: ['Chrome 5.0', 'Chrome 6.0', 'Chrome 7.0', 'Chrome 8.0', 'Chrome 9.0',
+                            'Chrome 10.0', 'Chrome 11.0', 'Chrome 12.0'],
+                        data: [0.12, 0.19, 0.12, 0.36, 0.32, 9.91, 0.50, 0.22],
+                        color: colors[2]
+                    }
+                }, {
+                    y: 7.15,
+                    color: colors[3],
+                    drilldown: {
+                        name: 'Safari versions',
+                        categories: ['Safari 5.0', 'Safari 4.0', 'Safari Win 5.0', 'Safari 4.1', 'Safari/Maxthon',
+                            'Safari 3.1', 'Safari 4.1'],
+                        data: [4.55, 1.42, 0.23, 0.21, 0.20, 0.19, 0.14],
+                        color: colors[3]
+                    }
+                }, {
+                    y: 2.14,
+                    color: colors[4],
+                    drilldown: {
+                        name: 'Opera versions',
+                        categories: ['Opera 9.x', 'Opera 10.x', 'Opera 11.x'],
+                        data: [ 0.12, 0.37, 1.65],
+                        color: colors[4]
+                    }
+                }];
+    
+        function setChart(name, categories, data, color) {
+            chart.xAxis[0].setCategories(categories, false);
+            chart.series[0].remove(false);
+            chart.addSeries({
+                name: name,
+                data: data,
+                color: color || 'white'
+            }, false);
+            chart.redraw();
+        }
+
+
+ 	});
+</script>
+
+

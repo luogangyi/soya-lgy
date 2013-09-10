@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  info_source: 
+  keyword: 
+  urgency: 1
+  url: MyString
+  blog_user_screen_name: MyString
+  title: MyString
+  content: MyText
+  read_count: 1
+  comment_count: 1
+
+two:
+  info_source: 
+  keyword: 
+  urgency: 1
+  url: MyString
+  blog_user_screen_name: MyString
+  title: MyString
+  content: MyText
+  read_count: 1
+  comment_count: 1

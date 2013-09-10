@@ -1,0 +1,299 @@
+<title>预警中心</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="alert">预警中心</span>	
+					<small>对预警级别高的信息进行处理</small>
+					
+				</h3>
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href="/alert">预警中心</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">首页</a></li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+		<!-- BEGIN PAGE CONTENT-->				
+		<div class="row-fluid profile">
+		
+		<div class="span12">
+			<!--BEGIN TABS-->  
+			<div class="tabbable tabbable-custom">
+							<ul class="nav nav-tabs">
+								<li class="active"><a href="#tab_1_1" data-toggle="tab" class="tab1 nohandlenum">待处理预警信息(<em><%= unhandle_alert_num %></em>)</a></li>
+								<li><a href="#tab_1_2" data-toggle="tab" class="tab2 handlednum">已处理(<em><%= handled_alert_num %></em>)</a></li>
+							    <li><a href="#tab_1_3" data-toggle="tab" class="tab3 ignorednum">已忽略(<em><%= ignored_alert_num %></em>)</a></li>
+							</ul>
+			<div class="tab-content">
+			
+			<div class="tab-pane row-fluid active" id="tab_1_1">
+			
+				<table class="table table-striped table-bordered table-advance table-hover">
+				<thead>
+					<tr>
+						<th width="10%">来源</th>
+						<th width="45%">内容</th>
+						<th width="10%">预警级别</th>
+						<th width="15%">处理方式</th>
+						<th width="15%">操作</th>
+					</tr>
+				</thead>
+				<tbody id="info-containt1">
+
+				</tbody>
+				</table>
+			
+			</div>
+			</div>
+
+		</div>
+		<!--END TABS-->
+		</div>
+		</div>
+		<!-- END PAGE CONTENT-->
+	</div>
+	<!-- END PAGE CONTAINER-->		
+</div>
+<!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+<!-- Modal -->
+
+<% if has_email_alert? %>
+<div id="myModal" class="modal hide fade" style="width:420px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">发送邮件</h3>
+  </div>
+  <div class="modal-body" style="padding-left:40px;">
+   
+      	<div class="control-group">
+	       	<label class="control-label">邮件内容</label>
+	       	<div class="controls">
+	       		<textarea class="large m-wrap mailinfo" rows="10"></textarea>
+	       	</div>
+		</div>
+    	<div class="controls maillist">
+           <% userlist.each do |user| %>
+           <label class="checkbox">
+           <div class="checker" id="uniform-undefined">
+           		<span>
+           			<input type="checkbox" value="<%= user.email %>" style="opacity: 0;">
+           		</span>
+           		</div>
+           		<%= user.username %>
+           </label>
+           <% end %>
+        </div>
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    <button class="btn btn-primary btn_send_mail">发送</button>
+  </div>
+</div>
+<% end %>
+
+<% if has_sms_alert? %>
+<div id="myModal2" class="modal hide fade" style="width:420px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">发送短信</h3>
+  </div>
+  <div class="modal-body" style="padding-left:40px;">
+   
+      	<div class="control-group">
+	       	<label class="control-label">短信内容</label>
+	       	<div class="controls">
+	       		<textarea class="large m-wrap smsinfo" rows="10"></textarea>
+	       	</div>
+		</div>
+    	<div class="controls smslist">
+           <% userlist.each do |user| %>
+           <label class="checkbox">
+           <div class="checker" id="uniform-undefined">
+           		<span>
+           			<input type="checkbox" value="<%= user.phone %>" style="opacity: 0;">
+           		</span>
+           		</div>
+           		<%= user.username %>
+           </label>
+           <% end %>
+        </div>
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    <button class="btn btn-primary btn_send_sms">发送</button>
+  </div>
+</div>
+<% end %>
+
+<script>
+var p=0;
+var filter="nohandle";
+
+var ignored_num=<%= ignored_alert_num %>;
+var unhandle_num=<%= unhandle_alert_num %>;
+var handled_num=<%= handled_alert_num %>;
+
+var ignored_p=$(".ignorednum").find("em");
+var unhandle_p=$(".nohandlenum").find("em");
+var handled_p=$(".handlednum").find("em");
+
+$(function() {
+	loadMore();
+	$(".tab1").click(function(){
+		filter="nohandle";
+		p=0;
+		$("#info-containt1").html("");
+		loadMore();
+	});
+	$(".tab2").click(function(){
+		filter="handled";
+		p=0;
+		$("#info-containt1").html("");
+		loadMore();
+	});
+	$(".tab3").click(function(){
+		filter="ignored";
+		p=0;
+		$("#info-containt1").html("");
+		loadMore();
+	});
+	
+	
+	$(".ignorebtn").live("click",function(){
+		$("#alert").show();
+		var parent=$(this).parent().parent();
+		var theid=parent.attr('id');
+		var type=parent.attr('class');
+		
+		$.get('/alert/'+type+"/ignore?id="+theid+"&value=1",function() {
+			$("#alert").hide();
+			ignored_num++;
+			ignored_p.html(ignored_num);
+			unhandle_num--;
+			unhandle_p.html(unhandle_num);
+			parent.remove();
+		})
+		.fail(function() { alert("操作失败，请联系管理员");});
+	});
+	
+	
+	$(".sendmail").live("click",function(){
+		var str = $(this).parent().parent().attr("content");
+		
+		$(".mailinfo").attr("url",$(this).parent().parent().attr("url"));
+		
+		$(".mailinfo").val(str);
+	});
+
+
+	$(".sendsms").live("click",function(){
+		var str = $(this).parent().parent().attr("content");
+		
+		$(".smsinfo").attr("t",$(this).parent().parent().attr("url"));
+		
+		$(".smsinfo").val(str);
+	});
+	
+	$(".btn_send_mail").live("click",function(){
+		$("#alert").show();
+		var maillist="";
+		$(".maillist").find(".checked").each(function(){
+			maillist+=$(this).children(":eq(0)").val()+",";
+		});
+		maillist = maillist.substring(0,maillist.length-1);
+		if(maillist.length<2){
+			alert("请勾选发送人员！");
+			$("#alert").hide();
+			return;
+		}
+		
+	 	$.get('/alert/sendmail',{maillist:maillist,info:$(".mailinfo").val(),url:$(".mailinfo").attr("url")},function() {
+			$("#alert").hide();
+			$(".mailinfo").val("");
+			$('#myModal').modal("hide");
+		}); 
+	});
+
+
+	$(".btn_send_sms").live("click",function(){
+		$("#alert").show();
+		var smslist="";
+		$(".smslist").find(".checked").each(function(){
+			smslist+=$(this).children(":eq(0)").val()+",";
+		});
+		smslist = smslist.substring(0,smslist.length-1);
+		if(smslist.length<2){
+			alert("请勾选发送人员！");
+			$("#alert").hide();
+			return;
+		}
+		
+	 	$.get('/alert/sendsms',{smslist:smslist,info:$(".smsinfo").val(),url:$(".smsinfo").attr("url")},function() {
+			$("#alert").hide();
+			$(".smsinfo").val("");
+			$('#myModal2').modal("hide");
+		}); 
+	});
+	
+	$(".handlebtn").live("click",function(){
+		$("#alert").show();
+		var parent=$(this).parent().parent();
+		var theid=parent.attr('id');
+		var type=parent.attr('class');
+		
+		$.get('/alert/'+type+"/handle?id="+theid+"&value=1",function() {
+			$("#alert").hide();
+			parent.remove();
+			handled_num++;
+			handled_p.html(handled_num);
+			unhandle_num--;
+			unhandle_p.html(unhandle_num);
+			parent.remove();
+		})
+		.fail(function() { alert("操作失败，请联系管理员");});
+	});
+	
+});
+
+window.onscroll = function() {
+	var winScroll = document.documentElement.scrollTop
+			|| document.body.scrollTop;
+	//console.log(winScroll+'  '+(document.body.offsetHeight - document.documentElement.clientHeight));
+	if (winScroll == (document.body.offsetHeight - document.documentElement.clientHeight+42)) {
+		
+		loadMore();
+
+	}
+};
+
+
+
+function loadMore() {
+	$("#alert").show();
+	$.get("/alert/alertlist?filter="+filter+"&page=" + p,
+			function(data) {
+				$("#info-containt1").append(data);
+				$("#alert").hide();
+				p++;
+			}).error(function() {
+		$("#alert").hide();
+	});
+}
+
+</script>

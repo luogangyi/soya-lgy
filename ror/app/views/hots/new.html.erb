@@ -1,0 +1,132 @@
+<title>热点事件</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12">
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->
+				<h3 class="page-title">
+					<span class="main_title" id="hot">热点事件</span>
+					<small>跟踪查询事件整个过程</small>
+				</h3>
+				<ul class="breadcrumb">
+					<li> <i class="icon-home"></i>
+						<a href="/hots/index">热点事件</a> <i class="icon-angle-right"></i>
+					</li>
+					<li>
+						<a href="#">新建热点事件</a>
+					</li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+		<!-- BEGIN PAGE CONTENT-->
+		<div class="row-fluid">
+			<div class="span12">
+				<!-- BEGIN VALIDATION STATES-->
+				<div class="portlet box green">
+					<div class="portlet-title">
+						<h4>
+							<i class="icon-reorder"></i>
+							新建热点事件
+						</h4>
+					</div>
+					<div class="portlet-body form">
+
+						<!-- BEGIN FORM-->
+						<%= form_for @hot ,:url => { :action => "create" } do |f| %>
+
+							<div class="accordion-group clear" style="padding:10px;">
+								<h4>热点事件名</h4>
+								<div class="controls">
+									<%= f.text_field :name %>
+								</div>
+							</div>
+							<div class="accordion-group clear" style="padding:10px;">
+								<h4>包含以下全部关键词</h4>
+								<div class="controls">
+									<%= f.text_field :has_keywords ,:class => "m-wra tags" %>
+								</div>
+							</div>
+							<div class="accordion-group clear" style="padding:10px;">
+								<h4>包含以下的任意关键词</h4>
+								<div class="controls">
+									<%= f.text_field :any_keywords ,:class => "m-wra tags" %>
+								</div>
+							</div>
+							<div class="accordion-group clear" style="padding:10px;">
+								<h4>不包含以下关键词</h4>
+								<div class="controls">
+									<%= f.text_field :without_keywords ,:class => "m-wra tags" %>
+								</div>
+							</div>
+
+							<div class="accordion-group clear" style="padding:10px;">
+								<div class = "filter" style="text-align:left;">
+								时间：
+								<%= f.text_field :start_at, :readonly=>true ,:class=> "mydate" %>
+								至
+								<%= f.text_field :end_at, :readonly=>true ,:class=> "mydate" %>
+								</div>
+							</div>
+							<div class="form-actions">
+								<button type="submit" class="btn add_btn green">添加</button>
+								<button type="button" class="btn">取消</button>
+							</div>
+
+						<% end %>
+						<!-- END FORM-->
+					</div>
+				</div>
+				<!-- END VALIDATION STATES-->
+			</div>
+		</div>
+
+		<!-- END PAGE CONTENT-->
+	</div>
+	<!-- END PAGE CONTAINER-->
+</div>
+<!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+<script type="text/javascript">
+$(function(){
+	Date.prototype.to_s = function() {
+		var mm = this.getMonth() + 1;
+		var dd = this.getDate();
+		if (mm < 10)
+			mm = '0' + mm;
+		if (dd < 10)
+			dd = '0' + dd;
+		return this.getFullYear() + '-' + mm + '-' + dd;
+		};
+
+ 		var today = new Date();
+		var yesterday = new Date(today - 24 * 60 * 60 * 1000);
+		var mydStartTime = $('#hot_start_at');
+		var mydEndTime = $('#hot_end_at');
+
+		mydStartTime.val(yesterday.to_s());
+		mydEndTime.val(today.to_s());
+
+		$(".add_btn").click(function(){
+
+			if($("#hot_name").val().length<1){
+				alert("请输入热点事件名称!");
+				$("#hot_name").focus();
+				return false;
+			}
+			if($("#hot_has_keywords").val().length<1 && $("#hot_any_keywords").val().length<1 && $("#hot_without_keywords").val().length<1){
+				alert("请至少选择一种筛选方法!");
+				return false;
+			}
+		});
+
+
+
+		});
+</script>

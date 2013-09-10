@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_origin_id: 1
+  info_source: 
+  screen_name: MyString
+  profile_image_url: MyString
+  status_count: 1
+  follewer_count: 1
+  following_count: 1
+  verified: false
+  geo_info_city: MyString
+  geo_info_province: MyString
+  gender: MyString
+
+two:
+  user_origin_id: 1
+  info_source: 
+  screen_name: MyString
+  profile_image_url: MyString
+  status_count: 1
+  follewer_count: 1
+  following_count: 1
+  verified: false
+  geo_info_city: MyString
+  geo_info_province: MyString
+  gender: MyString

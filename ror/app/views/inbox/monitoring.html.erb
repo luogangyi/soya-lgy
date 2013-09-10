@@ -1,0 +1,75 @@
+<!-- BEGIN PAGE -->
+<div class="page-content">
+  <!-- BEGIN PAGE CONTAINER-->
+  <div class="container-fluid">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="row-fluid">
+      <div class="span12">  
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
+        <h3 class="page-title">
+          <span class="main_title" id="weibo">舆情处理</span>
+          <small>对信息进行审核处理工作</small>
+        </h3>
+        <ul class="breadcrumb">
+          <li>
+            <i class="icon-home"></i>
+            <a href="#">舆情处理</a> 
+            <i class="icon-angle-right"></i>
+          </li>
+          <li><a href="#">关注的微博</a></li>
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+      </div>
+    </div>
+    <!-- END PAGE HEADER-->
+
+
+    <!-- BEGIN PAGE CONTENT--> 
+    <div class="row-fluid profile">
+    	<div class="span12 maincontent" id="<%= @type %>">
+    		<!-- BEGIN SAMPLE TABLE PORTLET-->
+    		<div class="tabbable tabbable-custom">
+    			<ul class="nav nav-tabs">
+    				<li <% if !params[:filter] %> class="active" <% end %>><a href="/inbox/weibo/monitoring"  class="monitoring">正在关注的微博(<em class="mnum"><%= monitoring_num %></em>)</a></li>
+    				<li <% if params[:filter] %> class="active" <% end %>><a href="/inbox/weibo/monitoring?filter=history"  class="history">历史关注微博(<em><%= monitor_history_num %></em>)</a></li>
+    			</ul>
+    			<div class="tab-content">
+    			   <div class="tab-pane row-fluid active" id="main-containt">
+    					  <%= render :partial => "monitoringinfo", :collection => @infos %>
+    			   </div>
+    		  </div>
+        </div>
+    		<!-- END SAMPLE TABLE PORTLET-->
+      </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+
+<script type="text/javascript">
+$(function() {
+ $(".unfocus").live('click',function(){
+
+      $("#alert").show();
+      $(this).addClass("focus");
+      $(this).removeClass("unfocus");
+      $(this).find("i").addClass("icon-eye-open");
+      $(this).find("i").removeClass("icon-eye-close");
+      var theid=$(this).parent().parent().parent().parent().attr('id');
+      $(this).parent().parent().parent().parent().remove();
+      $.get('/inbox/unmonitor/'+theid).done(function() {
+        var mnum=parseInt($(".mnum").html());
+        $(".mnum").html(mnum-1);
+        $("#alert").hide();
+        
+      })
+      .fail(function() { alert("操作失败，请联系管理员");});
+    });
+  
+});
+</script>

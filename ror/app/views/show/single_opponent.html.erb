@@ -1,0 +1,76 @@
+<title>标签信息展示</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="opponent">舆情展示</span>
+					<small>所有相关舆情的展示</small>
+				</h3>
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href="#">舆情展示</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">单条信息展示</a></li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+
+		<!-- BEGIN PAGE CONTENT-->	
+    <div class="row-fluid">
+      <div class="span12 maincontent">
+        <!-- BEGIN SAMPLE TABLE PORTLET-->
+        <%= render :partial => "infobyopponent", :collection => @infos %>
+        <!-- END SAMPLE TABLE PORTLET-->
+      </div>
+    </div>
+
+
+
+		<!-- END PAGE CONTENT-->
+		
+
+
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+<script type="text/javascript">
+
+
+$(function() {
+
+  highlight($(".title"));
+
+});
+
+
+function highlight(selector){
+  selector.each(function(){
+    var regEx = new RegExp(/ *@([{\u4e00-\u9fa5}A-Za-z0-9_-]*) ?/g);
+    var str = $(this).text();
+    var tmpstr=str.replace(regEx, "<a>@$1</a>");
+    var keywords= $(this).parent().parent().attr('key');
+    var keys=keywords.split(" ");
+    for(var i=0;i<keys.length;i++){
+      var reg=new RegExp("("+keys[i]+")","g"); 
+      tmpstr=tmpstr.replace(reg,"<em>$1</em>");
+    }
+    $(this).html(tmpstr);
+    
+  });
+  
+}
+
+</script>

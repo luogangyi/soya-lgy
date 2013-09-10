@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  handled: false
+  ignored: false
+
+two:
+  handled: false
+  ignored: false

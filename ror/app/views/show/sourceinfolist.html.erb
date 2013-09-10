@@ -1,0 +1,22 @@
+<table class="table table-hover fixtable" >
+	<tbody>
+	<% @sourceinfos.each do |info| %>
+		<tr>
+			<td width="20%"><%= info.class.name=="News" ? info.source_name : info.info_source.str %></td>
+			<% if @type != 'weibo' %>
+				<td width="70%" title="<%= info.title %>"><a href="/show/single/<%= info.info_source.info_source_type.enstr %>/<%= info.id %>"><%= info.title %></a></td>
+			<% else %>
+				<td width="70%" title="<%= info.weibo_user_screen_name+':'+info.text %>"><a href="/show/single/<%= info.info_source.info_source_type.enstr %>/<%= info.id %>"><%= info.weibo_user_screen_name+':'+info.text %></a></td>
+			<% end %>
+
+			<td><span class="label label-<%= sentiment_color(info.sentiment) %>"><%= info.sentiment_str %></span></td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>
+<div class="pagination pagination-right margin0">
+	<ul>
+		<li><a href="javascript:;" class="<%= @type %>prev">上一页</a></li>
+		<li><a href="javascript:;" class="<%= @type %>next">下一页</a></li>
+	</ul>
+</div>

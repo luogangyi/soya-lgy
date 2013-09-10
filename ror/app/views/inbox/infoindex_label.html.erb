@@ -1,0 +1,516 @@
+<!-- BEGIN PAGE -->
+<!-- BEGIN PAGE -->
+<div class="page-content">
+  <!-- BEGIN PAGE CONTAINER-->
+  <div class="container-fluid">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="row-fluid">
+      <div class="span12">  
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
+        <h3 class="page-title">
+          <span class="main_title" id="label<%= @label.id %>">舆情处理</span>
+          <small>对信息进行审核处理工作</small>
+        </h3>
+        <ul class="breadcrumb">
+          <li>
+            <i class="icon-home"></i>
+            <a href="#">舆情处理</a> 
+            <i class="icon-angle-right"></i>
+          </li>
+          <li><a href="#"><%= @typestr%></a></li>
+
+          <li class="pull-right no-text-shadow">
+            <div id="filter" class="filter">
+              时间：<input type="text" id="startTime" readonly="">
+              <select name="" id="startHours">
+                <% for i in 0..23 %>
+                    <option value="<%= i %>"><%= i %>时</option>
+                <% end %>
+              </select> 至 <input type="text" id="endTime" readonly=""> 
+              <select name="" id="endHours">
+                <% for i in 0..23 %>
+                    <option value="<%= i %>"><%= i %>时</option>
+                <% end %>
+              </select>
+              <select name="" id="order" style="width:80px;">
+                <option value="time">时间顺序</option>
+                <option value="urgency">预警级别</option>
+              </select>
+             
+              <button id="conditionSearch" class="gray-btn add-btn ok_btn" style="margin-right:5px;">应用</button>
+              <a id="conditionSearch" href="#myModal" class="gray-btn add-btn excel_btn" data-toggle="modal" style = "padding:1.5px 5px 1.5px 5px;">批量处理</a>
+            </div>      
+          </li>
+         
+
+
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+      </div>
+    </div>
+    <!-- END PAGE HEADER-->
+
+
+    <!-- BEGIN PAGE CONTENT--> 
+    <div class="row-fluid profile">
+    	<div class="span12 maincontent" id="<%= @type %>">
+    		<!-- BEGIN SAMPLE TABLE PORTLET-->
+    		<div class="tabbable tabbable-custom">
+    			<ul class="nav nav-tabs">
+    				<li class="active"><a href="#" data-toggle="tab" class="nohandle">待处理信息(<em><%= unhandle_num_label %></em>)</a></li>
+    				<li><a href="#" data-toggle="tab" class="handled">已处理(<em><%= handled_num_label %></em>)</a></li>
+    				<li><a href="#" data-toggle="tab" class="ignored">已忽略(<em><%= ignored_num_label %></em>)</a></li>
+    			</ul>
+    			<div class="tab-content">
+    			   <div class="tab-pane row-fluid active" id="main-containt">
+    			   </div>
+    		  </div>
+        </div>
+    		<!-- END SAMPLE TABLE PORTLET-->
+      </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" style="width:420px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">批量处理工具</h3>
+  </div>
+  <div class="modal-body" style="padding-left:40px;">
+   
+        <div class="control-group">
+          <label class="control-label">关键信息语句(<a href="javascript:;" class="searchbtn">点击查询</a>)</label>
+          <div class="controls">
+            <textarea class="large m-wrap keystr" rows="3"></textarea>
+          </div>
+       </div>
+       <div class="control-group">
+          <label class="control-label">将相关信息标记为</label>
+          <div class="controls">
+
+              <div>标签：<select data-placeholder="添加标签" class="chosen" multiple="multiple" tabindex="3" style="width:300px;">
+              <option value=""></option>
+              <% label_categories.each do |c| %>
+              <optgroup label="<%= c.str %>">
+                <% label_at_category(c.id).each do |l| %>
+                  <option><%= l.str %></option>
+                <% end %>
+              </optgroup>
+              <% end %>
+              </select>
+             <br><br>
+            情感：<select name="" id="emotion" style="width:100px">
+                <option value="1">正面</option>
+                <option value="3">中性</option>
+                <option value="2">负面</option>
+              </select>
+            </div>
+            
+         
+
+          </div>
+          -----------------------------------------------
+          <div class="controls">
+              <input type="checkbox" value="" id="ignoreornot" style="opacity: 0;">全部忽略
+          </div>
+       </div>
+     
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    <button class="btn btn-primary btn_handle_list">处理</button>
+  </div>
+</div>
+  
+
+<script>
+  
+  /*
+    时间format
+  */
+  Date.prototype.to_s = function() {
+    var mm = this.getMonth() + 1;
+    var dd = this.getDate();
+    if (mm < 10)
+      mm = '0' + mm;
+    if (dd < 10)
+      dd = '0' + dd;
+    return this.getFullYear() + '-' + mm + '-' + dd;
+  };
+  
+  /*
+    高亮关键字及@后用户名
+  */
+  function highlight(selector){
+    selector.each(function(){
+      var regEx = new RegExp(/ *@([{\u4e00-\u9fa5}A-Za-z0-9_-]*) ?/g);
+      var str = $(this).text();
+      var tmpstr=str.replace(regEx, "<a>@$1</a>");
+      var keywords= $(this).parent().parent().attr('key');
+      var keys=keywords.split(" ");
+      for(var i=0;i<keys.length;i++){
+        var reg=new RegExp("("+keys[i]+")","g"); 
+        tmpstr=tmpstr.replace(reg,"<em>$1</em>");
+      }
+      $(this).html(tmpstr);
+    });
+  }
+  
+  var pagenum = 0; //pagenumber
+  var infotype="weibo"; //动态加载的内容
+  
+  var filter="unhandle";
+  var start=0; //查询初始时间
+  var end=0;   //查询截止时间
+  var filtervalue=0; //filter值
+  
+  
+  $(function() {
+    
+    
+    var ignored_p=$(".ignored").find("em");
+    var unhandle_p=$(".nohandle").find("em");
+    var handled_p=$(".handled").find("em");
+    
+    var ignored_num=parseInt(ignored_p.html());
+    var unhandle_num=parseInt(unhandle_p.html());
+    var handled_num=parseInt(handled_p.html());
+    
+    loadMore();
+
+
+    /* 关注操作 */
+    $(".focus").live('click',function(){
+      $("#alert").show();
+      $(this).addClass("unfocus");
+      $(this).removeClass("focus");
+      $(this).find("i").addClass("icon-eye-close");
+      $(this).find("i").removeClass("icon-eye-open");
+      var theid=$(this).parent().parent().parent().parent().attr('id');
+      $.get('/inbox/monitor/'+theid,function(data){
+        if(data=="OK"){
+          var mnum=parseInt($(".mnum").html());
+          $(".mnum").html(mnum+1);
+          $("#alert").hide();
+        }
+      })
+      .fail(function() { alert("操作失败，请联系管理员");});
+    });
+    
+    
+    /* 取消关注操作 */
+    $(".unfocus").live('click',function(){
+      $("#alert").show();
+      $(this).addClass("focus");
+      $(this).removeClass("unfocus");
+      $(this).find("i").addClass("icon-eye-open");
+      $(this).find("i").removeClass("icon-eye-close");
+      var theid=$(this).parent().parent().parent().parent().attr('id');
+      $.get('/inbox/unmonitor/'+theid,function(data) {
+        if(data=="OK"){
+          var mnum=parseInt($(".mnum").html());
+          $(".mnum").html(mnum-1);
+          $("#alert").hide();
+        }
+      })
+      .fail(function() { alert("操作失败，请联系管理员");});
+    });
+    
+    
+    /* 忽略操作 */
+    $(".ignore").live('click',function(){
+      $("#alert").show();
+      var thep=$(this).parent().parent().parent().parent();
+      var theid=thep.attr('id');
+      //alert('/inbox/'+infotype+'/'+theid+'/ignore');
+      $.get('/inbox/'+infotype+'/'+theid+'/ignore',function(data) {
+        if(data=="OK"){
+          if(filter=="unhandle"){
+            unhandle_num--;
+            unhandle_p.html(unhandle_num);
+            ignored_num++;
+            ignored_p.html(ignored_num);
+          }else if(filter=="handled"){
+            handled_num--;
+            handled_p.html(handled_num);
+            ignored_num++;
+            ignored_p.html(ignored_num);
+          }
+          thep.remove();
+          $("#alert").hide();
+          if($("#main-containt").find("blockquote").size()<1){
+            pagenum=0;
+            $("#main-containt").html("");
+            loadMore();
+          }
+        }
+      })
+      .fail(function() { alert("操作失败，请联系管理员");});
+      
+    });
+    
+    
+    /* 取消忽略操作 */
+    $(".unignore").live('click',function(){
+      $("#alert").show();
+      var thep=$(this).parent().parent().parent().parent()
+      var theid=thep.attr('id');
+      
+      $.get('/inbox/'+infotype+'/'+theid+'/unignore',function(data) {
+        if(data=="OK"){
+        unhandle_num++;
+        unhandle_p.html(unhandle_num);
+        ignored_num--; 
+        ignored_p.html(ignored_num);
+        thep.remove();
+        $("#alert").hide();
+        if($("#main-containt").find("blockquote").size()<1)
+          loadMore();
+        }
+      })
+      .fail(function() { alert("操作失败，请联系管理员");});
+      
+      
+    });
+    
+    /* 设置预警等级操作 */
+    $(".stars li").live('click',
+      function() {
+        $("#alert").show();
+        var theid=$(this).parent().parent().parent().parent().parent().attr('id');
+        $(this).parent().removeClass();
+        $(this).parent().addClass("stars stars"+($(this).index() + 1));
+        //alert('/inbox/'+infotype+'/'+theid+'/set_urgency/'+($(this).index() + 1));
+          $.get('/inbox/'+infotype+'/'+theid+'/set_urgency/'+($(this).index() + 1),function(data) {
+            if(data=="OK")
+          $("#alert").hide();
+        })
+        .fail(function() { alert("操作失败，请联系管理员");});
+    });
+    
+    
+    $(".ok_btn").live('click',function(){
+      var dStartTime = $('#startTime');
+      var dEndTime = $('#endTime');
+      var dStartHours = $('#startHours');
+      var dEndHours = $('#endHours');
+      var d1=dStartTime.val()+" "+dStartHours.val()+":00:00";
+      var d2=dEndTime.val()+" "+dEndHours.val()+":59:00";
+
+      start=new Date(d1).getTime();
+      end=new Date(d2).getTime();
+      pagenum=0;
+      order=$("#order").val();
+      $("#main-containt").html("");
+      //alert(start);
+      loadMore();
+      
+      
+    });
+  
+    
+    /* 待处理的微博*/
+    $(".nohandle").live('click',function(){
+      pagenum=0;
+      filter="unhandle";
+      filtervalue=0;
+      $("#main-containt").html("");
+      loadMore();
+      $(this).parent().find("li").removeClass('active');
+      $(this).addClass('active');
+    });
+    /* 忽略的微博*/
+    $(".ignored").live('click',function(){
+      pagenum=0;
+      filter="ignored";
+      filtervalue=1;
+      $("#main-containt").html("");
+      loadMore();
+      $(this).parent().find("li").removeClass('active');urgency
+      $(this).addClass('active');
+    });
+    
+    /* 处理完的微博*/
+    $(".handled").live('click',function(){
+      pagenum=0;
+      filter="handled";
+      filtervalue=1;
+      $("#main-containt").html("");
+      loadMore();
+      $(this).parent().find("li").removeClass('active');
+      $(this).addClass('active');
+    });
+    
+    
+    /* 处理按钮事件 */
+    $(".btn_handled").live('click',function(){
+      $("#alert").show();
+      var p=$(this).parent().parent().parent();
+      var theid=$(this).parent().parent().parent().attr('id');
+      var thetags=p.find(".emotion").html().substring(0,2);
+      p.find(".del_tag").each(function(){
+        thetags=thetags+","+$(this).html();
+      });
+      //alert(p.html());
+      //alert('${ctx}/classifier/modify?weibo_id='+theid+'&tags='+thetags);
+        //alert('/inbox/'+infotype+'/'+theid+'/handle?tags='+thetags);
+        $.get('/inbox/'+infotype+'/'+theid+'/handle?tags='+thetags,function(data) {
+          if(data=="OK"){
+            $("#alert").hide();
+            if(filter=="unhandle"){
+            p.remove();
+            unhandle_num--;
+            unhandle_p.html(unhandle_num);
+            handled_num++;
+            handled_p.html(handled_num);
+            if($("#main-containt").find("blockquote").size()<1){
+              pagenum=0;
+              $("#main-containt").html("");
+              loadMore();
+            }
+          }
+        }
+        
+      })
+      .fail(function() { alert("操作失败，请联系管理员");});
+
+      
+    });
+    
+    
+    
+    
+    
+    
+  
+    
+    $(".add_tag").live('click',function(){
+      var val=$(this).html();
+      var flag=0;
+      $(this).parent().parent().parent().find(".del_tag").each(function(){
+        
+        if($(this).html()==val){
+          flag=1;
+        }
+          //replaceWith('<a class="S_bg1 S_line1 S_link2 del_tag" title="删除这个标签" href="javascript:void(0);" cid="'+cid+'">'+$(this).html()+'</a>');
+      });
+      if(flag==0)
+        $(this).parent().parent().parent().find(".wTablist2").prepend('<a class="S_bg1 S_line1 S_link2 del_tag" title="删除这个标签" href="javascript:void(0);">'+$(this).html()+'</a>');
+    });
+    
+    $(".del_tag").live('click',function(){
+      $(this).remove();
+    });
+    
+    $(".icon_edit").live('click',
+        function() {
+          $(this).parent().parent().parent().parent()
+              .parent().find(".edit_tags")
+              .slideDown('fast');
+        });
+    $("body").live('click',
+        function(e) {
+          if (!$(e.target).is('div.edit_tags')
+              && !$(e.target).is('a.icon_edit')
+              && !$(e.target).is('a.S_link2')) {
+            $(".edit_tags").slideUp('fast');
+          }
+        });
+    $(".emotion").live('click',function() {
+      if ($(this).hasClass("emotion_negative")) {
+        $(this).addClass("emotion_positive");
+        $(this).removeClass("emotion_negative");
+        $(this).removeClass("emotion_neutral");
+        $(this).html("正面消息");
+      } else if ($(this).hasClass("emotion_positive")) {
+        $(this).addClass("emotion_neutral");
+        $(this).removeClass("emotion_negative");
+        $(this).removeClass("emotion_positive");
+        $(this).html("中性消息");
+      } else if ($(this).hasClass("emotion_neutral")) {
+        $(this).addClass("emotion_negative");
+        $(this).removeClass("emotion_positive");
+        $(this).removeClass("emotion_neutral");
+        $(this).html("负面消息");
+      }
+    });
+
+  
+  });
+
+  window.onscroll = function() {
+    var winScroll = document.documentElement.scrollTop
+        || document.body.scrollTop;
+    //console.log(winScroll+'  '+(document.body.offsetHeight - document.documentElement.clientHeight));
+    if (winScroll == (document.body.offsetHeight - document.documentElement.clientHeight+42)) {
+      
+      loadMore();
+
+    }
+  };
+
+  function loadMore() {
+    $("#alert").show();
+    
+    $.get("/inbox/weibo/label/<%= @label.id %>/"+pagenum+"?filter="+filter+"&d1=" + start+"&d2=" + end+"&sortType=" + order,
+        function(data) {
+          pagenum++;
+          $("#main-containt").append(data);
+          $("#alert").hide();
+          highlight($(".weibo-txt"));
+        }).error(function() {
+          alert("全部加载完毕");
+    });
+  }
+
+
+
+  var flag=0;
+  $(".searchbtn").click(function(){
+    if($(".keystr").val().length>0){
+      javascript:window.open("/search/index?query="+$(".keystr").val(),"_blank");
+      flag = 1;
+    }
+  });
+
+  $(".btn_handle_list").click(function(){
+
+
+    if(flag==0){
+      alert("请先查询包含关键语句的信息列表！");
+      return;
+    }
+
+    if(confirm('确认无误?')){  
+      $("#alert").show();
+      var theignore = 0;
+      if($("#ignoreornot").attr("checked")) theignore = 1;
+
+      var str ="";
+      $(".chzn-choices").find("span").each(function(){
+        str += $(this).html()+" ";
+      });
+
+      $.get("/inbox/"+infotype+"/handlelist", {keystr :$(".keystr").val(), sentiment: $("#emotion").val(), urgency: $("#urgency").val(), labelstr: str ,ignore: theignore },
+          function(data){
+              if(data=="OK"){
+                $("#alert").hide();
+                flag = 0;
+                $('#myModal').modal("hide");
+                location.reload();
+              }
+          }).fail(function() { alert("error"); }); 
+   }  
+    
+  });
+</script>

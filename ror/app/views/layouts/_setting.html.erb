@@ -1,0 +1,276 @@
+<div id="side-shadow" style="display: none; left: 100%;">
+  <div id="navShadow"></div>
+  <div id="tbsSetting">
+    <div class="container-fluid">
+      <!-- BEGIN PAGE HEADER-->
+      <div class="row-fluid">
+        <div class="span12">
+          <!-- BEGIN PAGE TITLE & BREADCRUMB-->
+          <h3 class="page-title">
+            系统设置
+            <small>配置各项系统信息</small>
+          </h3>
+          <!-- END PAGE TITLE & BREADCRUMB-->
+
+          <div class="row-fluid">
+            <div class="span12">
+              <div class="tabbable tabbable-custom">
+                <ul class="nav nav-tabs">
+                  <li class="active">
+                    <a href="#tab_1_1" data-toggle="tab">关键词设置</a>
+                  </li>
+                  <li class="">
+                    <a href="#tab_1_2" data-toggle="tab">标签设置</a>
+                  </li>
+                  <li class="">
+                    <a href="#tab_1_3" data-toggle="tab">信息类别展示设置</a>
+                  </li>
+                  <li class="">
+                    <a href="#tab_1_4" data-toggle="tab">预警信息发送设置</a>
+                  </li>
+                  <li class="">
+                    <a href="#tab_1_5" data-toggle="tab">微博渠道配置</a>
+                  </li>
+                  <li class="">
+                    <a href="#tab_1_6" data-toggle="tab">其它渠道配置</a>
+                  </li>
+                  <li class="">
+                    <a href="#tab_1_7" data-toggle="tab">用户权限设置</a>
+                  </li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane active" id="tab_1_1">
+
+                    <div class="portlet box green">
+                      <div class="portlet-title">
+                        <h4> <i class="icon-cogs"></i>
+                          关键词设置
+                        </h4>
+                      </div>
+                      <div class="portlet-body form">
+                        <!-- BEGIN FORM-->
+                        <div class="form-horizontal">
+                          <div class="control-group">
+                            <div class="controls">
+                              <input id="keywords" type="text" class="m-wra tags" value="<%= keywords %>" /></div>
+                          </div>
+                          <div class="form-actions">
+                            <button type="submit" class="btn green keywords_btn">保存</button>
+                            <button type="button" class="btn cancel_btn">取消</button>
+                          </div>
+                        </div>
+                        <!-- END FORM--> </div>
+                    </div>
+
+                    <div class="row-fluid"></div>
+
+                  </div>
+                  <div class="tab-pane" id="tab_1_2">
+
+                    <div class="tabbable tabbable-custom tabs-left">
+                      <ul class="nav nav-tabs tabs-left">
+                        <li class="active">
+                          <a href="#tab_1_11" data-toggle="tab">标签组设置</a>
+                        </li>
+                        <li class="">
+                          <a href="#tab_1_22" data-toggle="tab">具体标签设置</a>
+                        </li>
+                      </ul>
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1_11">
+
+                          <div class="portlet box green">
+                            <div class="portlet-title">
+                              <h4> <i class="icon-cogs"></i>
+                                标签组设置
+                              </h4>
+                            </div>
+                            <div class="portlet-body form">
+                              <!-- BEGIN FORM-->
+                              <div class="form-horizontal">
+                                <div class="control-group">
+                                  <div class="controls">
+                                    <input id="categories" type="text" class="m-wra tags" value="<%= categories %>" /></div>
+                                </div>
+                                <div class="form-actions">
+                                  <button type="submit" class="btn green">保存</button>
+                                  <button type="button" class="btn cancel_btn">取消</button>
+                                </div>
+                              </div>
+                              <!-- END FORM--> </div>
+                          </div>
+
+                          <div class="row-fluid"></div>
+                        </div>
+                        <!--tab-pane-->
+                        <div class="tab-pane" id="tab_1_22">
+                          <div class="tab-pane active" id="tab_1_1_1">
+
+                            <div class="portlet box green">
+                              <div class="portlet-title">
+                                <h4>
+                                  <i class="icon-cogs"></i>
+                                  标签组设置
+                                </h4>
+                              </div>
+                              <div class="portlet-body form">
+                                <!-- BEGIN FORM-->
+                                <div class="form-horizontal">
+
+                                  <div class="clearfix">
+                                    <div class="btn-group">
+                                      <button id="sample_editable_1_new" class="btn green">
+                                        添加标签
+                                        <i class="icon-plus"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <table class="table table-striped table-hover table-bordered" id="sample_editable_1">
+                                    <thead>
+                                      <tr>
+                                        <th style="width:151px;">标签组</th>
+                                        <th style="width:150px;">标签</th>
+                                        <th style="width:450px;">包含关键词</th>
+                                        <th style="width:198px;">操作</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr class="">
+                                        <td>关键词分类</td>
+                                        <td>产品</td>
+                                        <td>
+                                          <form action="#" class="form-horizontal">
+                                            <div class="control-group">
+                                              <div class="controls">
+                                                <input id="tags_3" type="text" class="m-wra tags" value="产品质量,客户服务,销售渠道,其他分类" />
+                                              </div>
+                                            </div>
+                                          </form>
+                                        </td>
+                                        <td>
+                                          <a class="delete" href="javascript:;">删除</a>
+                                        </td>
+                                      </tr>
+                                      <tr class="">
+                                        <td>关键词分类</td>
+                                        <td>产品</td>
+                                        <td>
+                                          <form action="#" class="form-horizontal">
+                                            <div class="control-group">
+                                              <div class="controls">
+                                                <input id="tags_3" type="text" class="m-wra tags" value="产品质量,客户服务,销售渠道,其他分类" />
+                                              </div>
+                                            </div>
+                                          </form>
+                                        </td>
+                                        <td>
+                                          <a class="delete" href="javascript:;">删除</a>
+                                        </td>
+                                      </tr>
+                                      <tr class="">
+                                        <td>关键词分类</td>
+                                        <td>产品</td>
+                                        <td>
+                                          <form action="#" class="form-horizontal">
+                                            <div class="control-group">
+                                              <div class="controls">
+                                                <input id="tags_3" type="text" class="m-wra tags" value="产品质量,客户服务,销售渠道,其他分类" />
+                                              </div>
+                                            </div>
+                                          </form>
+                                        </td>
+                                        <td>
+                                          <a class="delete" href="javascript:;">删除</a>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  <div class="form-actions">
+                                    <button type="submit" class="btn green">保存</button>
+                                    <button type="button" class="btn cancel_btn">取消</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- END FORM-->
+                            <!--tab-pane--> </div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="tab_1_3">
+                    
+                    <div class="clearfix">
+                      <div class="btn-group">
+                        <button id="sample_editable_1_new" class="btn green">
+                          添加标签
+                          <i class="icon-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <table class="table table-striped table-hover table-bordered" id="sample_editable_1">
+                      <thead>
+                        <tr>
+                          <th style="width:151px;">热点事件</th>
+                          <th style="width:292px;">关键词</th>
+                          <th style="width:392px;">事件简介</th>
+                          <th style="width:198px;">操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="">
+                          <td>
+                            <a href="/hot/item">农民工上访</a>
+                          </td>
+                          <td>
+                            <form action="#" class="form-horizontal">
+                              <div class="control-group">
+                                <div class="controls">
+                                  <input id="tags_1" type="text" class="m-wra tags" value="上访,农民工" />
+                                </div>
+                              </div>
+                            </form>
+                          </td>
+                          <td class="hidewords">
+                            当地时间3月22日11时55分许，中国国家主席习近平乘坐的专机抵达莫斯当地时间3月22日11时55分许，中国国家主席习近平乘坐的专机抵达莫斯
+                          </td>
+                          <td>
+                            <a class="delete" href="javascript:;">删除</a>
+                          </td>
+                        </tr>
+                        <tr class="">
+                          <td>罗永浩砸冰箱</td>
+                          <td>
+                            <form action="#" class="form-horizontal">
+                              <div class="control-group">
+                                <div class="controls">
+                                  <input id="tags_2" type="text" class="m-wra tags" value="老罗,冰箱,砸" />
+                                </div>
+                              </div>
+                            </form>
+                          </td>
+                          <td>
+                            当地时间3月22日11时55分许，中国国家主席习近平乘坐的专机抵达莫斯当地时间3月22日11时55分许，中国国家主席习近平乘坐的专机抵达莫斯
+                          </td>
+                          <td>
+                            <a class="delete" href="javascript:;">删除</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

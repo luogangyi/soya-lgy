@@ -1,0 +1,269 @@
+<!-- BEGIN PAGE -->
+<div class="page-content">
+  <!-- BEGIN PAGE CONTAINER-->
+  <div class="container-fluid">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="row-fluid">
+      <div class="span12">  
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
+        <h3 class="page-title">
+          <span class="main_title" id="<%= params[:info_type] %>">舆情处理</span>
+          <small>对信息进行审核处理工作</small>
+        </h3>
+        <ul class="breadcrumb">
+          <li>
+            <i class="icon-home"></i>
+            <a href="#">单条舆情处理</a> 
+          </li>
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+      </div>
+    </div>
+    <!-- END PAGE HEADER-->
+
+		<!-- BEGIN PAGE CONTENT-->	
+    <div class="row-fluid">
+      <div class="span12 maincontent" id="<%= params[:info_type] %>">
+        <!-- BEGIN SAMPLE TABLE PORTLET-->
+        <%= render :partial => "info", :collection => @infos %>
+        <!-- END SAMPLE TABLE PORTLET-->
+      </div>
+    </div>
+
+
+
+		<!-- END PAGE CONTENT-->
+		
+
+
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+<script type="text/javascript">
+
+$(function() {
+
+  var infotype=$(".maincontent").attr("id");; //动态加载的内容
+
+  highlight($(".weibo-txt"));
+
+  		/* 关注操作 */
+		$(".focus").live('click',function(){
+			$("#alert").show();
+			$(this).addClass("unfocus");
+			$(this).removeClass("focus");
+			$(this).find("i").addClass("icon-eye-close");
+			$(this).find("i").removeClass("icon-eye-open");
+			var theid=$(this).parent().parent().parent().parent().attr('id');
+			$.get('/inbox/monitor/'+theid,function(data){
+				if(data=="OK"){
+					var mnum=parseInt($(".mnum").html());
+					$(".mnum").html(mnum+1);
+					$("#alert").hide();
+				}
+			})
+			.fail(function() { alert("操作失败，请联系管理员");});
+		});
+		
+		
+		/* 取消关注操作 */
+		$(".unfocus").live('click',function(){
+			$("#alert").show();
+			$(this).addClass("focus");
+			$(this).removeClass("unfocus");
+			$(this).find("i").addClass("icon-eye-open");
+			$(this).find("i").removeClass("icon-eye-close");
+			var theid=$(this).parent().parent().parent().parent().attr('id');
+			$.get('/inbox/unmonitor/'+theid,function(data) {
+				if(data=="OK"){
+					var mnum=parseInt($(".mnum").html());
+					$(".mnum").html(mnum-1);
+					$("#alert").hide();
+				}
+			})
+			.fail(function() { alert("操作失败，请联系管理员");});
+		});
+		
+		
+		/* 忽略操作 */
+		$(".ignore").live('click',function(){
+			$("#alert").show();
+			var thep=$(this).parent().parent().parent().parent();
+			var theid=thep.attr('id');
+			//alert('/inbox/'+infotype+'/'+theid+'/ignore');
+			$.get('/inbox/'+infotype+'/'+theid+'/ignore',function(data) {
+				if(data=="OK"){
+					if(filter=="unhandle"){
+						unhandle_num--;
+						unhandle_p.html(unhandle_num);
+						ignored_num++;
+						ignored_p.html(ignored_num);
+					}else if(filter=="handled"){
+						handled_num--;
+						handled_p.html(handled_num);
+						ignored_num++;
+						ignored_p.html(ignored_num);
+					}
+					thep.remove();
+					$("#alert").hide();
+				}
+			})
+			.fail(function() { alert("操作失败，请联系管理员");});
+			
+			if($("#main-containt").find(".content").size()<4)loadMore();
+		});
+		
+		
+		/* 取消忽略操作 */
+		$(".unignore").live('click',function(){
+			$("#alert").show();
+			var thep=$(this).parent().parent().parent().parent()
+			var theid=thep.attr('id');
+			
+			$.get('/inbox/'+infotype+'/'+theid+'/unignore',function(data) {
+				if(data=="OK"){
+				unhandle_num++;
+				unhandle_p.html(unhandle_num);
+				ignored_num--; 
+				ignored_p.html(ignored_num);
+				thep.remove();
+				$("#alert").hide();
+				if($("#main-containt").find(".content").size()<4)
+					loadMore();
+				}
+			})
+			.fail(function() { alert("操作失败，请联系管理员");});
+			
+			
+		});
+		
+		/* 设置预警等级操作 */
+		$(".stars li").live('click',
+			function() {
+				$("#alert").show();
+				var theid=$(this).parent().parent().parent().parent().parent().attr('id');
+				$(this).parent().removeClass();
+				$(this).parent().addClass("stars stars"+($(this).index() + 1));
+				//alert('/inbox/'+infotype+'/'+theid+'/set_urgency/'+($(this).index() + 1));
+			    $.get('/inbox/'+infotype+'/'+theid+'/set_urgency/'+($(this).index() + 1),function(data) {
+			    	if(data=="OK")
+					$("#alert").hide();
+				})
+				.fail(function() { alert("操作失败，请联系管理员");});
+		});
+
+
+
+		/* 处理按钮事件 */
+		$(".btn_handled").live('click',function(){
+			$("#alert").show();
+			var p=$(this).parent().parent().parent();
+			var theid=$(this).parent().parent().parent().attr('id');
+			var thetags=p.find(".emotion").html().substring(0,2);
+			p.find(".del_tag").each(function(){
+				thetags=thetags+","+$(this).html();
+			});
+			//alert(p.html());
+			//alert('${ctx}/classifier/modify?weibo_id='+theid+'&tags='+thetags);
+
+		  	$.get('/inbox/'+infotype+'/'+theid+'/handle?tags='+thetags,function(data) {
+		  		if(data=="OK"){
+			  		$("#alert").hide();
+			  		if(filter=="unhandle"){
+						p.remove();
+						unhandle_num--;
+						unhandle_p.html(unhandle_num);
+						handled_num++;
+						handled_p.html(handled_num);
+						if($("#main-containt").find(".content").size()<4)loadMore();
+					}
+				}
+				
+			})
+			.fail(function() { alert("操作失败，请联系管理员");});
+
+			
+		});
+		
+		
+		
+		
+		
+		
+	
+		
+		$(".add_tag").live('click',function(){
+			var val=$(this).html();
+			var flag=0;
+			$(this).parent().parent().parent().find(".del_tag").each(function(){
+				
+				if($(this).html()==val){
+					flag=1;
+				}
+					//replaceWith('<a class="S_bg1 S_line1 S_link2 del_tag" title="删除这个标签" href="javascript:void(0);" cid="'+cid+'">'+$(this).html()+'</a>');
+			});
+			if(flag==0)
+				$(this).parent().parent().parent().find(".wTablist2").prepend('<a class="S_bg1 S_line1 S_link2 del_tag" title="删除这个标签" href="javascript:void(0);">'+$(this).html()+'</a>');
+		});
+		
+		$(".del_tag").live('click',function(){
+			$(this).remove();
+		});
+		
+		$(".icon_edit").live('click',
+				function() {
+					$(this).parent().parent().parent().parent()
+							.parent().find(".edit_tags")
+							.slideDown('fast');
+				});
+		$("body").live('click',
+				function(e) {
+					if (!$(e.target).is('div.edit_tags')
+							&& !$(e.target).is('a.icon_edit')
+							&& !$(e.target).is('a.S_link2')) {
+						$(".edit_tags").slideUp('fast');
+					}
+				});
+		$(".emotion").live('click',function() {
+			if ($(this).hasClass("emotion_negative")) {
+				$(this).addClass("emotion_positive");
+				$(this).removeClass("emotion_negative");
+				$(this).removeClass("emotion_neutral");
+				$(this).html("正面消息");
+			} else if ($(this).hasClass("emotion_positive")) {
+				$(this).addClass("emotion_neutral");
+				$(this).removeClass("emotion_negative");
+				$(this).removeClass("emotion_positive");
+				$(this).html("中性消息");
+			} else if ($(this).hasClass("emotion_neutral")) {
+				$(this).addClass("emotion_negative");
+				$(this).removeClass("emotion_positive");
+				$(this).removeClass("emotion_neutral");
+				$(this).html("负面消息");
+			}
+		});
+		
+
+});
+
+
+function highlight(selector){
+  selector.each(function(){
+    var regEx = new RegExp(/ *@([{\u4e00-\u9fa5}A-Za-z0-9_-]*) ?/g);
+    var str = $(this).text();
+    var tmpstr=str.replace(regEx, "<a>@$1</a>");
+    var keywords= $(this).parent().parent().attr('key');
+    var keys=keywords.split(" ");
+    for(var i=0;i<keys.length;i++){
+      var reg=new RegExp("("+keys[i]+")","g"); 
+      tmpstr=tmpstr.replace(reg,"<em>$1</em>");
+    }
+    $(this).html(tmpstr);
+  });
+}
+
+</script>

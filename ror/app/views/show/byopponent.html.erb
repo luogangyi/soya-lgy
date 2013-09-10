@@ -1,0 +1,128 @@
+<title>TBS-IWOM:竞品新闻展示</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+  <!-- BEGIN PAGE CONTAINER-->
+  <div class="container-fluid">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="row-fluid">
+      <div class="span12">  
+        <!-- BEGIN PAGE TITLE & BREADCRUMB-->     
+        <h3 class="page-title">
+          <span class="main_title" id="opponent">舆情展示</span>
+          <small>所有相关舆情的展示</small>
+        </h3>
+        <ul class="breadcrumb">
+          <li>
+            <i class="icon-home"></i>
+            <a href="#">舆情展示</a> 
+            <i class="icon-angle-right"></i>
+          </li>
+          <li><a href="#">竞品新闻展示</a></li>
+        </ul>
+        <!-- END PAGE TITLE & BREADCRUMB-->
+      </div>
+    </div>
+    <!-- END PAGE HEADER-->
+    <!-- BEGIN PAGE CONTENT-->  
+
+    <% @opponent_keywords.each.with_index do |opponent_keyword, index| %>
+      <% if index%2==0 %>
+        <div class="row-fluid">
+      <% end %>
+      <div class="span6">
+        <!-- BEGIN SAMPLE TABLE PORTLET-->
+        <div class="portlet box <%= @colors[index] %>"> 
+          <div class="portlet-title">
+            <h4><i class="icon-reorder"></i><a href="/show/opponent/<%= opponent_keyword.id %>/index"><%= opponent_keyword.str %></a></h4>
+            <div class="tools">
+              <a href="javascript:;" class="reload"></a>
+            </div>
+          </div>
+          <div class="portlet-body containt<%= opponent_keyword.id %>" style="height:225px;">
+            
+          </div>
+        </div>
+        <!-- END SAMPLE TABLE PORTLET-->
+      </div>
+       <% if index%2==1 %>
+        </div>
+      <% end %>
+    <% end %>
+
+
+
+    <!-- END PAGE CONTENT-->
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+
+
+<script type="text/javascript">
+$(function() {
+  
+  var myUIblock = function (el) {
+        el.block({
+            message: '<img src="/assets/img/loading.gif" align="absmiddle">',
+            css: {
+                border: 'none',
+                padding: '2px',
+                backgroundColor: 'none'
+            },
+            overlayCSS: {
+                backgroundColor: '#000',
+                opacity: 0.05,
+                cursor: 'wait'
+            }
+        });
+    }
+  
+  <% @opponent_keywords.each do |opponent_keyword| 
+     opponent_keyword_id = opponent_keyword.id
+  %>
+    var page<%= opponent_keyword_id %> = 0;
+    myUIblock($(".containt<%= opponent_keyword_id %>"));
+    $.get("/show/byopponent/<%= opponent_keyword_id %>/"+page<%= opponent_keyword_id %>).done(function(data) {
+      //alert(data);
+      $(".containt<%= opponent_keyword_id %>").html(data);
+    });
+    
+    
+    $("a.prev<%= opponent_keyword_id %>").live('click',function(){
+      if($(this).hasClass('locked')){
+        return;
+      }
+      
+      if(page<%= opponent_keyword_id %>>1){
+        myUIblock($(".containt<%= opponent_keyword_id %>"));
+        page<%= opponent_keyword_id %>-=1;
+        $(".containt<%= opponent_keyword_id %>").load("/show/byopponent/<%= opponent_keyword_id %>/"+page<%= opponent_keyword_id %>);
+        $(".next<%= opponent_keyword_id %>").removeClass('locked');
+      }else{
+        $(".prev<%= opponent_keyword_id %>").addClass('locked');
+      }
+      console.log(page<%= opponent_keyword_id %>);
+    });
+    $("a.next<%= opponent_keyword_id %>").live('click',function(){
+      if($(this).hasClass('locked')){
+        return;
+      }
+      myUIblock($(".containt<%= opponent_keyword_id %>"));
+      page<%= opponent_keyword_id %>+=1;
+      $.get("/show/byopponent/<%= opponent_keyword_id %>/"+page<%= opponent_keyword_id %>).done(function(data) {
+        $(".prev<%= opponent_keyword_id %>").removeClass('locked');
+        $(".containt<%= opponent_keyword_id %>").html(data);
+      })
+      .fail(function() {
+        $(".prev<%= opponent_keyword_id %>").addClass('locked');
+      });
+    });
+  <% end %>
+  
+});
+</script>
+
+

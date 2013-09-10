@@ -1,0 +1,130 @@
+<title>标签信息展示</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="tagsinfo">舆情展示</span>
+					<small>所有相关舆情的展示</small>
+				</h3>
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href="#">舆情展示</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">标签信息展示</a></li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+
+		<!-- BEGIN PAGE CONTENT-->	
+
+	    <% @labels.each.with_index do |label, index| %>
+	      <% if index%2==0 %>
+	        <div class="row-fluid">
+	      <% end %>
+	      <div class="span6">
+	        <!-- BEGIN SAMPLE TABLE PORTLET-->
+	        <div class="portlet box <%= @colors[index] %>"> 
+	          <div class="portlet-title">
+	            <h4><i class="icon-reorder"></i><a href="/show/label/<%= label.id %>/index"><%= label.str %></a></h4>
+	            <div class="tools">
+	              <a href="javascript:;" class="reload"></a>
+	            </div>
+	          </div>
+	          <div class="portlet-body containt<%= label.id%>" style="height:225px;">
+	            
+	          </div>
+	        </div>
+	        <!-- END SAMPLE TABLE PORTLET-->
+	      </div>
+	       <% if index%2==1 %>
+	        </div>
+	       <% end %>
+
+	    <% end %>
+      <% if @labels.length%2==1 %>
+          </div>
+      <% end %>
+
+		<!-- END PAGE CONTENT-->
+		
+
+
+    </div>
+    <!-- END PAGE CONTAINER-->    
+  </div>
+  <!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
+
+<script type="text/javascript">
+$(function() {
+  
+  var myUIblock = function (el) {
+        el.block({
+            message: '<img src="/assets/img/loading.gif" align="absmiddle">',
+            css: {
+                border: 'none',
+                padding: '2px',
+                backgroundColor: 'none'
+            },
+            overlayCSS: {
+                backgroundColor: '#000',
+                opacity: 0.05,
+                cursor: 'wait'
+            }
+        });
+    }
+  
+  <% @labels.each do |label|  %>
+    var page<%= label.id %> = 1;
+    myUIblock($(".containt<%= label.id %>"));
+    
+    $.get("/show/bylabel/<%= label.id %>/"+page<%= label.id %>).done(function(data) {
+      //alert("/show/bylabel/<%= label.id %>/"+page<%= label.id %>);
+      $(".containt<%= label.id %>").html(data);
+    });
+    
+    
+    $("a.prev<%= label.id %>").live('click',function(){
+      if($(this).hasClass('locked')){
+        return;
+      }
+      
+      if(page<%= label.id %>>1){
+        myUIblock($(".containt<%= label.id %>"));
+        page<%= label.id %>-=1;
+        $(".containt<%= label.id %>").load("/show/bylabel/<%= label.id %>/"+page<%= label.id %>);
+        $(".next<%= label.id %>").removeClass('locked');
+      }else{
+        $(".prev<%= label.id %>").addClass('locked');
+      }
+      console.log(page<%= label.id %>);
+    });
+    $("a.next<%= label.id %>").live('click',function(){
+      if($(this).hasClass('locked')){
+        return;
+      }
+      myUIblock($(".containt<%= label.id %>"));
+      page<%= label.id %>+=1;
+      $.get("/show/bylabel/<%= label.id %>/"+page<%= label.id %>).done(function(data) {
+        $(".prev<%= label.id %>").removeClass('locked');
+        $(".containt<%= label.id %>").html(data);
+      })
+      .fail(function() {
+        $(".prev<%= label.id %>").addClass('locked');
+      });
+    });
+  <% end %>
+  
+});
+</script>
+

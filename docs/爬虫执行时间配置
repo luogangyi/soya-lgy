@@ -1,0 +1,15 @@
+参考 https://github.com/javan/whenever
+
+每次修改后，在ror目录下运行命令
+whenever --update-crontab
+
+然后使用
+crontab -e
+查看命令是否写入
+
+
+更新代码注意：
+1. 照Python目录下的config.sample.py对该系统的config.py进行修改（加了enable）；
+2. 按38的系统的python_tasks对爬虫进行配置；
+3. 删除原 /etc/crontab 中的内容；
+4. 然后执行上文所进行的更新。

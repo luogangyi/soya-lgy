@@ -1,0 +1,120 @@
+<title>信息来源配置</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">	
+	<div class="container-fluid">	
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="hot">系统配置</span>
+					<small>自定义需关注事件的关键词、标签、信息来源等基本配置</small>
+				</h3>
+				<ul class="breadcrumb">
+					<li>
+						<i class="icon-home"></i>
+						<a href="/hots/index">系统配置</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">信息来源配置</a></li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+		<!-- BEGIN PAGE CONTENT-->	
+		<div class="row-fluid">
+			<div class="span12">
+				<!-- BEGIN VALIDATION STATES-->
+				<div class="portlet box blue">
+					<div class="portlet-title">
+						<h4>
+							<i class="icon-reorder"></i>
+							选择信息来源-第四步
+						</h4>
+					</div>
+					<div class="portlet-body form">
+
+						<%= form_tag('/system_setting/info_source_type_update') do %>
+						<div class="form-wizard">  
+							<div class="navbar steps">
+		                         <div class="navbar-inner">
+		                            <ul class="row-fluid nav nav-pills">
+		                               <li class="span3 done">
+		                                  <a href="#" data-toggle="tab" class="step">
+		                                  <span class="number">1</span>
+		                                  <span class="desc"><i class="icon-ok"></i>基本配置</span>   
+		                                  </a>
+		                               </li>
+		                               <li class="span3 done">
+		                                  <a href="#" data-toggle="tab" class="step">
+		                                  <span class="number">2</span>
+		                                  <span class="desc"><i class="icon-ok"></i>标签组详细配置</span>   
+		                                  </a>
+		                               </li>
+		                               <li class="span3 done">
+		                                  <a href="#" data-toggle="tab" class="step">
+		                                  <span class="number">3</span>
+		                                  <span class="desc"><i class="icon-ok"></i>标签关键词配置</span>   
+		                                  </a>
+		                               </li>
+		                               <li class="span3 active">
+		                                  <a href="#" data-toggle="tab" class="step active">
+		                                  <span class="number">4</span>
+		                                  <span class="desc"><i class="icon-ok"></i>信息来源配置</span>   
+		                                  </a> 
+		                               </li>
+		                            </ul>
+		                         </div>
+		                      </div>
+							<div id="bar" class="progress progress-success progress-striped">
+			                        <div class="bar" style="width: 100%;"></div>
+			                </div>
+						<table class="table table-hover">
+							<thead>
+								<tr style='background-color:#eee'>
+									<th style='width:20px'>#</th>
+									<th style='width:150px;text-align:center'>信息来源</th>
+									<th style='width:150px;text-align:center'>是否启用</th>
+									<th></th>
+								</tr>
+							</thead>
+								<tbody>
+									<% if @info_source_types%>
+									<% @info_source_types.each do |info_source_type|%>
+										<tr>
+											<td style='width:20px'><label class="control-label"><%=info_source_type.id %></label></td>
+											<td style='width:150px;text-align:center'>
+												<label class="control-label"><%=info_source_type.str %></label>
+											</td>
+											<td style='width:150px;text-align:center'>
+												<% if info_source_type.enable ==1 %>
+													<%=check_box_tag 'info_source_type_ids[]',info_source_type.id,
+													 true %>
+												<% else %>
+													<%=check_box_tag 'info_source_type_ids[]',info_source_type.id, 
+													false %>
+												<% end %>
+											</td>
+											<td >
+											</td>
+										</tr>
+									<% end %>
+									<% end %>
+								</tbody>
+							</table>	
+							<div class="form-actions">
+								<button type="submit" class="btn add_btn green">完成<i class="icon-ok"></i></button>
+								<button type="button" class="btn">取消</button>
+							</div>
+						<!-- End Div Form-->
+						</div>
+						<% end %>
+						<!-- END FORM-->
+					</div>
+				</div>
+				<!-- END VALIDATION STATES-->
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  single_source_status: 
+  origin_id: MyString
+  url: MyString
+  reposts_count: 1
+  comments_count: 1
+  attitudes_count: 1
+  text: MyString
+  source_app: MyString
+  pic: MyString
+  single_weibo_user: 
+  created_at: 2013-07-14 11:44:26
+  repost_depth: 1
+  direct_reposts_count: 1
+  parent_origin_id: MyString
+
+two:
+  single_source_status: 
+  origin_id: MyString
+  url: MyString
+  reposts_count: 1
+  comments_count: 1
+  attitudes_count: 1
+  text: MyString
+  source_app: MyString
+  pic: MyString
+  single_weibo_user: 
+  created_at: 2013-07-14 11:44:26
+  repost_depth: 1
+  direct_reposts_count: 1
+  parent_origin_id: MyString

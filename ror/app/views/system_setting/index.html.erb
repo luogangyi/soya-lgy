@@ -1,0 +1,172 @@
+<title>系统配置</title>
+<!-- BEGIN PAGE -->
+<div class="page-content">
+	<!-- BEGIN PAGE CONTAINER-->
+	<div class="container-fluid">
+		<!-- BEGIN PAGE HEADER-->
+		<div class="row-fluid">
+			<div class="span12"> 	
+				<!-- BEGIN PAGE TITLE & BREADCRUMB-->			
+				<h3 class="page-title">
+					<span class="main_title" id="hot">系统配置</span>
+					<small>自定义需关注事件的关键词、标签、信息来源等基本配置</small>
+				</h3>
+				<ul class="breadcrumb">
+				<li>
+						<i class="icon-home"></i>
+						<a href="/system_setting/index">系统配置</a> 
+						<i class="icon-angle-right"></i>
+					</li>
+					<li><a href="#">首页</a></li>
+				</ul>
+				<!-- END PAGE TITLE & BREADCRUMB-->
+			</div>
+		</div>
+		<!-- END PAGE HEADER-->
+		<!-- BEGIN PAGE CONTENT-->		
+		
+		<!-- 如果已经配置过，则显示配置信息 -->
+	
+		<div class="row-fluid">
+			<div class="portlet box purple">
+				<div class="portlet-title">
+					<h4>
+						<i class="icon-reorder"></i>
+						基本信息
+					</h4>
+				</div>
+				<div class="portlet-body form">	
+					<table class="table table-hover" style='background-color:#eee'>
+						<tbody >
+						<% if @hots%>
+						<% @hots.each do |hot|%>
+
+							<tr >
+								<td>
+								<h4 style="font-family: 'Microsoft YaHei','Open Sans';">事件名称：<%= hot.name %></h4>
+								</td>
+							</tr>
+							<tr>
+								<td>
+								<h4 style="font-family: 'Microsoft YaHei','Open Sans';">
+						   	关注时间：<%= (hot.start_at).strftime("%Y年%m月%d日") %> ~ <%= (hot.end_at).strftime("%Y年%m月%d日") %>
+								</h4>
+							</td>
+							</tr>
+
+						<% end %>
+						<% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		<!-- END PAGE CONTENT-->
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<!-- BEGIN VALIDATION STATES-->
+				<div class="portlet box purple">
+					<div class="portlet-title">
+						<h4>
+							<i class="icon-reorder"></i>
+							标签组及标签
+						</h4>
+					</div>
+					<div class="portlet-body form">	
+					<table class="table table-hover">
+							<tbody>
+								<% if @categories%>
+								<% @categories.each do |category|%>
+									<tr style='background-color:#eee'>
+										<td width='150px'>标签组名：
+										<%= category.str %></td>
+										<td width='150px'>标签组类别：
+											<% if category.by_keyword ==true %>
+											按关键词
+											<% else %>
+											机器学习
+											<% end %>
+										</td>
+										<td >
+										</td>
+									</tr>
+									<tr>
+										<td style='vertical-align:middle'>
+											<label class="control-label">包含标签：</label>
+										</td>
+										<td  colspan='2' >
+											<p>
+												<% category.labels.each do |label|%>
+													<a class="btn green" href="#"><%= label.str%></a>
+													
+												<% end %>
+											</P>                        
+										</td>
+									</tr>
+								<% end %>
+								<% end %>
+							</tbody>
+						</table>	
+
+					</div>
+				</div>
+				<!-- END VALIDATION STATES-->
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<!-- BEGIN VALIDATION STATES-->
+				<div class="portlet box purple">
+					<div class="portlet-title">
+						<h4>
+							<i class="icon-reorder"></i>
+							信息来源
+						</h4>
+					</div>
+					<div class="portlet-body form">
+
+						<table class="table table-hover">
+							<thead>
+								<tr style='background-color:#eee'>
+									<th style='width:20px'>#</th>
+									<th style='width:150px;text-align:center'>信息来源</th>
+									<th style='width:150px;text-align:center'>是否启用</th>
+									<th></th>
+								</tr>
+							</thead>
+								<tbody>
+									<% if @info_source_types%>
+									<% @info_source_types.each do |info_source_type|%>
+										<tr>
+											<td style='width:20px'><label class="control-label"><%=info_source_type.id %></label></td>
+											<td style='width:150px;text-align:center'>
+												<label class="control-label"><%=info_source_type.str %></label>
+											</td>
+											<td style='width:150px;text-align:center'>
+												<% if info_source_type.enable ==1 %>
+													<%=check_box_tag 'info_source_type_ids[]',info_source_type.id,
+													 true,:disabled => true %>
+												<% else %>
+													<%=check_box_tag 'info_source_type_ids[]',info_source_type.id, 
+													false ,:disabled => true%>
+												<% end %>
+											</td>
+											<td >
+											</td>
+										</tr>
+									<% end %>
+								</tbody>
+							</table>	
+						<!-- End Div Form-->
+						<% end %>
+						<!-- END FORM-->
+					</div>
+				</div>
+				<!-- END VALIDATION STATES-->
+			</div>
+		</div>
+	<!-- END PAGE CONTAINER-->		
+</div>
+<!-- END PAGE -->
+</div>
+<!-- END CONTAINER -->
